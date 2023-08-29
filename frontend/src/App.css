@@ -1,0 +1,12 @@
+
+.main{
+  justify-content: center;
+  max-width: 50%;
+  position: absolute;
+  left: 10%;
+}
+.text-field{
+  position: relative;
+  height: 700px;
+  width: 700px;
+}
