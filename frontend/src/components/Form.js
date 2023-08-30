@@ -30,22 +30,18 @@ function Form() {
     };
   
     const addNewSummary = async () => {
-      let formField = new FormData()
-      formField.append('title',"GG")
-      formField.append('question',"AA")
-      formField.append('text',Summary)
-      // formField.append('summary',Summary)
-      await axios({
-        method: 'post',
-        url:'http://localhost:8000/api/text',
-        data: formField
-      }).then(response=>{
-        console.log(response.data);
-        // history.push('/')
-      })
-  }
-
-
+      
+      try {
+        const response = await axios.post('http://localhost:8000/api/summaries/', {
+          text: TitleID,
+          summary: Summary,
+        });
+  
+        console.log('New summary created:', response.data);
+      } catch (error) {
+        console.error('Error creating summary:', error);
+      }
+    }
   return (
     <div className='main'>
       <form>
