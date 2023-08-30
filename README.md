@@ -39,15 +39,13 @@ Under construction :(
 * Note that this would work for local database so create the relevent database schema given the data you want to edit in setting.py
 in setting.py under DATABASES add
 
-`'default': { `
 
+
+        'default': {
         'ENGINE': 'django.db.backends.mysql',
-        
-        'NAME': name of the schema you created,
-        
-        'HOST': 'localhost',
-        
-        'USER': 'root',
-        
-        'PASSWORD': your password 
-   ` }`
+        'NAME': 'freedb_DSE project',
+        'HOST': 'sql.freedb.tech',
+        'USER': 'freedb_dse_project',
+        'PASSWORD': 'Z!u8Pmpu6&ECe9X'
+    }
+
