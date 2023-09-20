@@ -8,11 +8,11 @@ Open command line and run the following commands to setup
 1. `https://github.com/dan-niles/dse-project-frontend.git`
 2. `cd dse-project-frontend`
 
-To install backend
+To install frontend
 1. `cd backend`
 2. `npm install`
 
-To install frontend
+To install backend
 1. `cd frontend`
 2. `pipenv shell`  (Note: if you havent install it install pipenv using `pip install pipenv `)
 3. `pipenv install`
