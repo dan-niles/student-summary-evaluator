@@ -13,10 +13,10 @@ import {
 	Unstable_Grid2 as Grid,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CompanyCard } from "src/sections/companies/company-card";
-import { CompaniesSearch } from "src/sections/companies/companies-search";
+import { AssignmentCard } from "src/sections/assignments/assignment-card";
+import { AssignmentsSearch } from "src/sections/assignments/assignments-search";
 
-const companies = [
+const assignments = [
 	{
 		id: "2569ce0d517a7f06d3ea1f24",
 		createdAt: "27/03/2019",
@@ -48,7 +48,7 @@ const companies = [
 		id: "1efecb2bf6a51def9869ab0f",
 		createdAt: "04/04/2019",
 		description:
-			"Lyft is an on-demand transportation company based in San Francisco, California.",
+			"Lyft is an on-demand transportation assignment based in San Francisco, California.",
 		logo: "/assets/logos/logo-lyft.png",
 		title: "Lyft",
 		downloads: "406",
@@ -76,7 +76,7 @@ const companies = [
 const Page = () => (
 	<>
 		<Head>
-			<title>Companies | Summary Evaluation System</title>
+			<title>Assignments | Summary Evaluation System</title>
 		</Head>
 		<Box
 			component="main"
@@ -89,7 +89,7 @@ const Page = () => (
 				<Stack spacing={3}>
 					<Stack direction="row" justifyContent="space-between" spacing={4}>
 						<Stack spacing={1}>
-							<Typography variant="h4">Companies</Typography>
+							<Typography variant="h4">Assignments</Typography>
 							<Stack alignItems="center" direction="row" spacing={1}>
 								<Button
 									color="inherit"
@@ -122,15 +122,15 @@ const Page = () => (
 								}
 								variant="contained"
 							>
-								Add
+								Create New
 							</Button>
 						</div>
 					</Stack>
-					<CompaniesSearch />
+					<AssignmentsSearch />
 					<Grid container spacing={3}>
-						{companies.map((company) => (
-							<Grid xs={12} md={6} lg={4} key={company.id}>
-								<CompanyCard company={company} />
+						{assignments.map((assignment) => (
+							<Grid xs={12} md={6} lg={4} key={assignment.id}>
+								<AssignmentCard assignment={assignment} />
 							</Grid>
 						))}
 					</Grid>
