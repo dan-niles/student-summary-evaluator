@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { usePopover } from "src/hooks/use-popover";
-import { AccountPopover } from "./account-popover";
 import { UserButton } from "@clerk/nextjs";
 
 const SIDE_NAV_WIDTH = 280;
@@ -88,25 +87,10 @@ export const TopNav = (props) => {
 								</Badge>
 							</IconButton>
 						</Tooltip>
-						{/* <Avatar
-							onClick={accountPopover.handleOpen}
-							ref={accountPopover.anchorRef}
-							sx={{
-								cursor: "pointer",
-								height: 40,
-								width: 40,
-							}}
-							src="/assets/avatars/avatar-anika-visser.png"
-						/> */}
 						<UserButton afterSignOutUrl="/" />
 					</Stack>
 				</Stack>
 			</Box>
-			{/* <AccountPopover
-        anchorEl={accountPopover.anchorRef.current}
-        open={accountPopover.open}
-        onClose={accountPopover.handleClose}
-      /> */}
 		</>
 	);
 };
