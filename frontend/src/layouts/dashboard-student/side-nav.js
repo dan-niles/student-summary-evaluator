@@ -45,11 +45,11 @@ export const SideNav = (props) => {
 					<Box
 						component={NextLink}
 						href="/"
-						// sx={{
-						// 	display: "inline-flex",
-						// 	height: 32,
-						// 	width: 32,
-						// }}
+						sx={{
+							display: "inline-flex",
+							height: 32,
+							width: 32,
+						}}
 					>
 						<Logo />
 					</Box>
@@ -67,10 +67,10 @@ export const SideNav = (props) => {
 					>
 						<div>
 							<Typography color="inherit" variant="subtitle1">
-								John Doe
+								Devias
 							</Typography>
 							<Typography color="neutral.400" variant="body2">
-								Teacher
+								Production
 							</Typography>
 						</div>
 						<SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>
