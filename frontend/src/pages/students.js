@@ -14,9 +14,10 @@ import {
 } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { CustomersTable } from "src/sections/customer/customers-table";
-import { CustomersSearch } from "src/sections/customer/customers-search";
+import { StudentsTable } from "src/sections/student/students-table";
+import { StudentsSearch } from "src/sections/student/students-search";
 import { applyPagination } from "src/utils/apply-pagination";
+import { clerkClient } from "@clerk/nextjs";
 
 const now = new Date();
 
@@ -163,24 +164,31 @@ const data = [
 	},
 ];
 
-const useCustomers = (page, rowsPerPage) => {
+const useStudents = (page, rowsPerPage) => {
 	return useMemo(() => {
 		return applyPagination(data, page, rowsPerPage);
 	}, [page, rowsPerPage]);
 };
 
-const useCustomerIds = (customers) => {
+const useStudentIds = (students) => {
 	return useMemo(() => {
-		return customers.map((customer) => customer.id);
-	}, [customers]);
+		return students.map((student) => student.id);
+	}, [students]);
+};
+
+const fetchUsers = async () => {
+	const users = await clerkClient.users.getUserList();
+	return users;
 };
 
 const Page = () => {
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
-	const customers = useCustomers(page, rowsPerPage);
-	const customersIds = useCustomerIds(customers);
-	const customersSelection = useSelection(customersIds);
+	const students = useStudents(page, rowsPerPage);
+	const studentsIds = useStudentIds(students);
+	const studentsSelection = useSelection(studentsIds);
+	// const users = fetchUsers();
+	// console.log(users);
 
 	const handlePageChange = useCallback((event, value) => {
 		setPage(value);
@@ -193,7 +201,7 @@ const Page = () => {
 	return (
 		<>
 			<Head>
-				<title>Customers | Summary Evaluation System</title>
+				<title>Students | Summary Evaluation System</title>
 			</Head>
 			<Box
 				component="main"
@@ -206,7 +214,7 @@ const Page = () => {
 					<Stack spacing={3}>
 						<Stack direction="row" justifyContent="space-between" spacing={4}>
 							<Stack spacing={1}>
-								<Typography variant="h4">Customers</Typography>
+								<Typography variant="h4">Students</Typography>
 								<Stack alignItems="center" direction="row" spacing={1}>
 									<Button
 										color="inherit"
@@ -243,19 +251,19 @@ const Page = () => {
 								</Button>
 							</div>
 						</Stack>
-						<CustomersSearch />
-						<CustomersTable
+						<StudentsSearch />
+						<StudentsTable
 							count={data.length}
-							items={customers}
-							onDeselectAll={customersSelection.handleDeselectAll}
-							onDeselectOne={customersSelection.handleDeselectOne}
+							items={students}
+							onDeselectAll={studentsSelection.handleDeselectAll}
+							onDeselectOne={studentsSelection.handleDeselectOne}
 							onPageChange={handlePageChange}
 							onRowsPerPageChange={handleRowsPerPageChange}
-							onSelectAll={customersSelection.handleSelectAll}
-							onSelectOne={customersSelection.handleSelectOne}
+							onSelectAll={studentsSelection.handleSelectAll}
+							onSelectOne={studentsSelection.handleSelectOne}
 							page={page}
 							rowsPerPage={rowsPerPage}
-							selected={customersSelection.selected}
+							selected={studentsSelection.selected}
 						/>
 					</Stack>
 				</Container>
