@@ -9,7 +9,7 @@ import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
 import RectangleStackIcon from "@heroicons/react/24/solid/RectangleStackIcon";
 import { SvgIcon } from "@mui/material";
 
-export const items = [
+export const itemsTeacher = [
 	{
 		title: "Overview",
 		path: "/",
@@ -37,15 +37,15 @@ export const items = [
 			</SvgIcon>
 		),
 	},
-	{
-		title: "Account",
-		path: "/account",
-		icon: (
-			<SvgIcon fontSize="small">
-				<UserIcon />
-			</SvgIcon>
-		),
-	},
+	// {
+	// 	title: "Account",
+	// 	path: "/account",
+	// 	icon: (
+	// 		<SvgIcon fontSize="small">
+	// 			<UserIcon />
+	// 		</SvgIcon>
+	// 	),
+	// },
 	{
 		title: "Settings",
 		path: "/settings",

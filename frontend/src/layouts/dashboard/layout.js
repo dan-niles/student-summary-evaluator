@@ -26,6 +26,20 @@ export const Layout = (props) => {
 	const { children } = props;
 	const pathname = usePathname();
 	const [openNav, setOpenNav] = useState(false);
+	const [isStudent, setIsStudent] = useState(false);
+	const [userName, setUserName] = useState("");
+
+	useEffect(() => {
+		if (typeof window !== "undefined" && window.localStorage) {
+			const user = JSON.parse(localStorage.getItem("user_data"));
+			if (user.username == "teacher") {
+				setIsStudent(false);
+			} else {
+				setIsStudent(true);
+			}
+			setUserName(user.firstName + " " + user.lastName);
+		}
+	}, []);
 
 	const handlePathnameChange = useCallback(() => {
 		if (openNav) {
@@ -44,7 +58,12 @@ export const Layout = (props) => {
 	return (
 		<>
 			<TopNav onNavOpen={() => setOpenNav(true)} />
-			<SideNav onClose={() => setOpenNav(false)} open={openNav} />
+			<SideNav
+				onClose={() => setOpenNav(false)}
+				open={openNav}
+				isStudent={isStudent}
+				userName={userName}
+			/>
 			<LayoutRoot>
 				<LayoutContainer>{children}</LayoutContainer>
 			</LayoutRoot>

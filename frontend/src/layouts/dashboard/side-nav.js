@@ -14,13 +14,24 @@ import {
 } from "@mui/material";
 import { Logo } from "src/components/logo";
 import { Scrollbar } from "src/components/scrollbar";
-import { items } from "./config";
+import { itemsTeacher } from "./config-teacher";
+import { itemsStudent } from "./config-student";
 import { SideNavItem } from "./side-nav-item";
+import { useState, useEffect } from "react";
 
 export const SideNav = (props) => {
 	const { open, onClose } = props;
 	const pathname = usePathname();
 	const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+	const [items, setItems] = useState(itemsTeacher);
+
+	useEffect(() => {
+		if (props.isStudent) {
+			setItems(itemsStudent);
+		} else {
+			setItems(itemsTeacher);
+		}
+	}, [props.isStudent]);
 
 	const content = (
 		<Scrollbar
@@ -42,15 +53,7 @@ export const SideNav = (props) => {
 				}}
 			>
 				<Box sx={{ p: 3 }}>
-					<Box
-						component={NextLink}
-						href="/"
-						// sx={{
-						// 	display: "inline-flex",
-						// 	height: 32,
-						// 	width: 32,
-						// }}
-					>
+					<Box component={NextLink} href="/">
 						<Logo />
 					</Box>
 					<Box
@@ -67,10 +70,10 @@ export const SideNav = (props) => {
 					>
 						<div>
 							<Typography color="inherit" variant="subtitle1">
-								John Doe
+								{props.userName}
 							</Typography>
 							<Typography color="neutral.400" variant="body2">
-								Teacher
+								{props.isStudent ? "Student" : "Teacher"}
 							</Typography>
 						</div>
 						<SvgIcon fontSize="small" sx={{ color: "neutral.500" }}>

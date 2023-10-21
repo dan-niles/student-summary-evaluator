@@ -187,8 +187,6 @@ const Page = () => {
 	const students = useStudents(page, rowsPerPage);
 	const studentsIds = useStudentIds(students);
 	const studentsSelection = useSelection(studentsIds);
-	// const users = fetchUsers();
-	// console.log(users);
 
 	const handlePageChange = useCallback((event, value) => {
 		setPage(value);
