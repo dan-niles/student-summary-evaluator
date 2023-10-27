@@ -15,6 +15,7 @@ import {
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { AssignmentCard } from "src/sections/assignments/assignment-card";
 import { AssignmentsSearch } from "src/sections/assignments/assignments-search";
+import { CreateAssignmentBtn } from "src/sections/assignments/create-assignment-btn";
 
 const assignments = [
 	{
@@ -114,16 +115,7 @@ const Page = () => (
 							</Stack>
 						</Stack>
 						<div>
-							<Button
-								startIcon={
-									<SvgIcon fontSize="small">
-										<PlusIcon />
-									</SvgIcon>
-								}
-								variant="contained"
-							>
-								Create New
-							</Button>
+							<CreateAssignmentBtn />
 						</div>
 					</Stack>
 					<AssignmentsSearch />
