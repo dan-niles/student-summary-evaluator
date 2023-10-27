@@ -28,8 +28,17 @@ const style = {
 export const CreateAssignmentBtn = () => {
 	const [open, setOpen] = React.useState(false);
 	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
-	const [value, setValue] = React.useState("");
+	const handleClose = () => {
+		setOpen(false);
+		setTitle("");
+		setQuestion("");
+		setText("");
+		setDeadline(dayjs());
+	};
+
+	const [title, setTitle] = React.useState("");
+	const [question, setQuestion] = React.useState("");
+	const [text, setText] = React.useState("");
 	const [deadline, setDeadline] = React.useState(dayjs());
 
 	return (
@@ -59,16 +68,24 @@ export const CreateAssignmentBtn = () => {
 							className="mb-0 pb-0"
 						/>
 						<CardContent>
-							<TextField label="Title" variant="filled" className="mb-3" />
+							<TextField
+								label="Title"
+								variant="filled"
+								className="mb-3"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+							/>
 							<TextField
 								label="Prompt Question"
 								variant="filled"
 								className="mb-3 w-full"
+								value={question}
+								onChange={(e) => setQuestion(e.target.value)}
 							/>
 							<ReactQuill
 								theme="snow"
-								value={value}
-								onChange={setValue}
+								value={text}
+								onChange={setText}
 								className="mb-12"
 								style={{ height: "100px" }}
 							/>
