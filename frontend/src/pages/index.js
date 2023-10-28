@@ -45,7 +45,7 @@ const Page = (props) => {
 								difference={12}
 								positive
 								sx={{ height: "100%" }}
-								value="$24k"
+								value="$25k"
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
