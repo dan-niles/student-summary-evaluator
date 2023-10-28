@@ -1,6 +1,10 @@
 import PropTypes from "prop-types";
 import UserGroupIcon from "@heroicons/react/24/solid/UserGroupIcon";
 import ClockIcon from "@heroicons/react/24/solid/ClockIcon";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import {
 	Avatar,
 	Box,
@@ -33,13 +37,20 @@ export const AssignmentCard = (props) => {
 					{assignment.description}
 				</Typography>
 			</CardContent>
-			<CardActions className="px-6 mb-3">
-				<Button variant="contained" size="small">
+			<CardActions className="px-6 mb-3 flex">
+				<Button variant="contained" size="small" startIcon={<VisibilityIcon />}>
 					View
 				</Button>
-				<Button variant="outlined" size="small">
+				<Button variant="outlined" size="small" startIcon={<EditIcon />}>
 					Edit
 				</Button>
+				<IconButton
+					aria-label="delete"
+					className="justify-self-end"
+					color="error"
+				>
+					<DeleteIcon />
+				</IconButton>
 			</CardActions>
 			<Box sx={{ flexGrow: 1 }} />
 			<Divider />
