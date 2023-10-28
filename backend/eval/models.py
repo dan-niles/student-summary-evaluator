@@ -18,3 +18,18 @@ class Summaries(models.Model):
 
     def __int__(self):
         return self.pk
+
+class Teachers(models.Model):
+    firstName = models.CharField(max_length=20)
+    lastName = models.CharField(max_length=20)
+
+    def __int__(self):
+        return self.pk
+    
+class Students(models.Model):
+    firstName = models.CharField(max_length=20)
+    lastName = models.CharField(max_length=20)
+
+    def __int__(self):
+        return self.pk
+    

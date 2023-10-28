@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eval',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '0701827780'
+        'NAME': 'freedb_DSE Project',
+        'HOST': 'sql.freedb.tech',
+        'USER': 'freedb_group14',
+        'PASSWORD': 'Ypwd#KUaqBt27Y?'
     }
 }
 
