@@ -4,3 +4,4 @@
 # backend/eval/__pycache__/
 # backend/eval/migrations/__pycache__/
 
+/frontend/package-lock.json
