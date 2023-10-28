@@ -34,8 +34,8 @@ class Assignments(models.Model):
     
 class Summaries(models.Model):
     # text = models.ForeignKey(Text, on_delete=models.CASCADE)
-    question = models.ForeignKey(Assignments, on_delete=models.CASCADE)
-    student = models.ForeignKey(Students, on_delete=models.CASCADE)
+    question = models.ForeignKey(Assignments, on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(Students, on_delete=models.CASCADE, null=True)
     summary = models.TextField()
     content_score = models.DecimalField(max_digits=5,decimal_places=2,default=0.00)
     wording_score = models.DecimalField(max_digits=5,decimal_places=2,default=0.00)
