@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'eval',
     'rest_framework',
     "corsheaders",
+    "whitenoise.runserver_nostatic",
 ]
 
 MIDDLEWARE = [
