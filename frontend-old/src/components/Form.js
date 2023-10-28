@@ -18,12 +18,13 @@ function Form() {
 	const [Summary, setSummary] = useState("");
 	const [contentScore, setContentScore] = useState(0);
 	const [wordingScore, setWordingScore] = useState(0);
-	const fetchText = async () => {
-		const result = await axios.get("http://localhost:8000/api/text");
-
-		console.log(result.data);
-		setText(result.data);
-	};
+	const fetchText = () => {
+		return new Promise(function(resolve, reject) {
+		  fetch('http://localhost:8000/api/text').then(response => {
+			resolve(response);
+		  });
+		});
+	  };
 
 	useEffect(() => {
 		fetchText();
