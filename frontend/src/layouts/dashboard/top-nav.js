@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import BellIcon from "@heroicons/react/24/solid/BellIcon";
-import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+import ChatBubbleLeftEllipsisIcon from "@heroicons/react/24/solid/ChatBubbleLeftEllipsisIcon";
 import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
 import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import {
@@ -71,10 +71,10 @@ export const TopNav = (props) => {
 						</Tooltip>
 					</Stack>
 					<Stack alignItems="center" direction="row" spacing={2}>
-						<Tooltip title="Contacts">
+						<Tooltip title="Chat">
 							<IconButton>
 								<SvgIcon fontSize="small">
-									<UsersIcon />
+									<ChatBubbleLeftEllipsisIcon />
 								</SvgIcon>
 							</IconButton>
 						</Tooltip>
