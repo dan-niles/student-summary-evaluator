@@ -82,7 +82,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dse-project-db',
-        'HOST': ' dse-project-db.cfge0rpojokv.eu-north-1.rds.amazonaws.com',
+        'HOST': 'dse-project-db.cfge0rpojokv.eu-north-1.rds.amazonaws.com',
         'USER': 'admin',
         'PASSWORD': 'DSE_Project_UOM',
     }
