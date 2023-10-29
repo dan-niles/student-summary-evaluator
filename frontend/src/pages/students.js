@@ -18,10 +18,11 @@ import { StudentsTable } from "src/sections/student/students-table";
 import { StudentsSearch } from "src/sections/student/students-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { clerkClient } from "@clerk/nextjs";
+import prisma from "../lib/prisma";
 
 const now = new Date();
 
-const data = [
+const data1 = [
 	{
 		id: "5e887ac47eed253091be10cb",
 		address: {
@@ -164,7 +165,7 @@ const data = [
 	},
 ];
 
-const useStudents = (page, rowsPerPage) => {
+const useStudents = (data, page, rowsPerPage) => {
 	return useMemo(() => {
 		return applyPagination(data, page, rowsPerPage);
 	}, [page, rowsPerPage]);
@@ -181,12 +182,32 @@ const fetchUsers = async () => {
 	return users;
 };
 
-const Page = () => {
+const Page = (props) => {
+	const [data, setData] = useState(() =>
+		props.students.map((student) => {
+			return {
+				id: student.id,
+				address: {
+					city: "Salt Lake City",
+					country: "USA",
+					state: "Utah",
+					street: "368 Lamberts Branch Road",
+				},
+				avatar: "/assets/avatars/avatar-nasimiyu-danai.png",
+				createdAt: subDays(subHours(now, 1), 9).getTime(),
+				email: "nasimiyu.danai@devias.io",
+				name: student.firstName + " " + student.lastName,
+				phone: "801-301-7894",
+			};
+		})
+	);
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
-	const students = useStudents(page, rowsPerPage);
+	const students = useStudents(data, page, rowsPerPage);
 	const studentsIds = useStudentIds(students);
 	const studentsSelection = useSelection(studentsIds);
+
+	console.log(props.students);
 
 	const handlePageChange = useCallback((event, value) => {
 		setPage(value);
@@ -271,5 +292,20 @@ const Page = () => {
 };
 
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
+
+export const getStaticProps = async () => {
+	const students = await prisma.eval_students.findMany();
+	console.log(students);
+
+	return {
+		props: {
+			students: JSON.parse(
+				JSON.stringify(students, (key, value) =>
+					typeof value === "bigint" ? value.toString() : value
+				)
+			),
+		},
+	};
+};
 
 export default Page;
