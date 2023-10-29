@@ -13,6 +13,9 @@ import {
 import { alpha, useTheme } from '@mui/material/styles';
 import { Chart } from 'src/components/chart';
 
+import { useEffect, useState } from 'react';
+
+
 const useChartOptions = () => {
   const theme = useTheme();
 
@@ -104,8 +107,12 @@ const useChartOptions = () => {
   };
 };
 
+
+
+
 export const OverviewSales = (props) => {
-  const { chartSeries, sx } = props;
+  const { chartSeries, sx, assignmentid} = props;
+
   const chartOptions = useChartOptions();
 
   return (

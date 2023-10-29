@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { subDays, subHours } from "date-fns";
-import { Box, Container, Unstable_Grid2 as Grid } from "@mui/material";
+import { Box, Container, Unstable_Grid2 as Grid,TextField,MenuItem } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { OverviewBudget } from "src/sections/overview/overview-budget";
 import { OverviewLatestOrders } from "src/sections/overview/overview-latest-orders";
@@ -14,23 +14,38 @@ import { OverviewTraffic } from "src/sections/overview/overview-traffic";
 import { clerkClient } from "@clerk/nextjs";
 import { getAuth, buildClerkProps } from "@clerk/nextjs/server";
 
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
+import { PrismaClient } from '@prisma/client'
 
 const now = new Date();
 
+const prisma = new PrismaClient();
+const[assignmentID,setAssignmentID] = useState(0)
 const Page = (props) => {
-	const { __clerk_ssr_state } = props;
+    //const[assignment,setAssignment] = useState("")
+	
+	const { __clerk_ssr_state, assignments } = props;
 	useEffect(() => {
 		if (typeof window !== "undefined" && window.localStorage) {
 			localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
 		}
 	}, []);
+     
+
+    const handleSelectChange = (event) => {
+		const selectedValue = event.target.value;
+		const selectedQ = assignments.find((assignment) => assignment.question === selectedValue);
+
+		setAssignmentID(selectedQ?.id);
+		console.log(assignmentID);
+	};
 
 	return (
 		<>
 			<Head>
 				<title>Overview | Summary Evaluation System</title>
 			</Head>
+
 			<Box
 				component="main"
 				sx={{
@@ -40,6 +55,28 @@ const Page = (props) => {
 			>
 				<Container maxWidth="xl">
 					<Grid container spacing={3}>
+					<TextField
+						sx={{ mb: 2 }}
+						fullWidth
+						id="exampleFormControlSelect"
+						select
+						label="Title"
+						helperText="Please select your title"
+						onChange={handleSelectChange}
+					>
+						{assignments.map((assignment, index) => (
+							<MenuItem key={index} value={assignment.question}>
+								{assignment.question}
+							</MenuItem>
+						))}
+						{/* <MenuItem  value="q1"> Question 1</MenuItem>
+						<MenuItem value= "q2"> Question 2</MenuItem>
+						<MenuItem  value= "q3"> Question 3</MenuItem>
+						<MenuItem  value="q4"> Question 4</MenuItem> */}
+					</TextField>
+
+
+
 						<Grid xs={12} sm={6} lg={3}>
 							<OverviewBudget
 								difference={12}
@@ -70,11 +107,12 @@ const Page = (props) => {
 										data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20],
 									},
 									{
-										name: "Last year",
-										data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13],
+										name: "last year",
+										data: [12, 36, 14, 3, 2, 24, 4, 19, 12, 15, 11, 10],
 									},
 								]}
 								sx={{ height: "100%" }}
+								assignmentid = {assignmentID}
 							/>
 						</Grid>
 						<Grid xs={12} md={6} lg={4}>
@@ -202,7 +240,22 @@ export const getServerSideProps = async (ctx) => {
 
 	const user = userId ? await clerkClient.users.getUser(userId) : undefined;
 
-	return { props: { ...buildClerkProps(ctx.req, { user }) } };
+    const assignments = await prisma.eval_assignments.findMany()
+	
+	const contentValues = await prisma.eval_summaries.findMany({
+		where: {
+		  question_id: assignmentID, // Replace 'id' with your actual field name and 'specificId' with the value you want to query by.
+		},
+		select: {
+		 contentValues: true, // Specify the field you want to retrieve
+		},
+	  });
+    console.log(assignmentID)
+	return { props: { ...buildClerkProps(ctx.req, { user }), 
+	assignments: JSON.parse(
+		JSON.stringify(assignments, (key, value) =>
+		typeof value === 'bigint' ? value.toString() : value)
+	) }};
 };
 
 export default Page;
