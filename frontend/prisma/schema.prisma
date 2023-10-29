@@ -15,7 +15,7 @@ model auth_group {
 }
 
 model auth_group_permissions {
-  id              BigInt          @id @default(autoincrement())
+  id              Int          @id @default(autoincrement())
   group_id        Int
   permission_id   Int
   auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_group_permissio_permission_id_84c5c92e_fk_auth_perm")
@@ -55,7 +55,7 @@ model auth_user {
 }
 
 model auth_user_groups {
-  id         BigInt     @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   user_id    Int
   group_id   Int
   auth_group auth_group @relation(fields: [group_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_user_groups_group_id_97559544_fk_auth_group_id")
@@ -66,7 +66,7 @@ model auth_user_groups {
 }
 
 model auth_user_user_permissions {
-  id              BigInt          @id @default(autoincrement())
+  id              Int          @id @default(autoincrement())
   user_id         Int
   permission_id   Int
   auth_permission auth_permission @relation(fields: [permission_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm")
@@ -104,7 +104,7 @@ model django_content_type {
 }
 
 model django_migrations {
-  id      BigInt   @id @default(autoincrement())
+  id      Int   @id @default(autoincrement())
   app     String   @db.VarChar(255)
   name    String   @db.VarChar(255)
   applied DateTime @db.DateTime(6)
@@ -119,11 +119,11 @@ model django_session {
 }
 
 model eval_assignments {
-  id             BigInt           @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   question       String           @db.VarChar(50)
   deadline       DateTime?        @db.Date
-  createdBy_id   BigInt
-  textTitle_id   BigInt
+  createdBy_id   Int
+  textTitle_id   Int
   eval_teachers  eval_teachers    @relation(fields: [createdBy_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eval_assignments_createdBy_id_fc916e28_fk_eval_teachers_id")
   eval_text      eval_text        @relation(fields: [textTitle_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eval_assignments_textTitle_id_f25f9056_fk_eval_text_id")
   eval_summaries eval_summaries[]
@@ -133,20 +133,20 @@ model eval_assignments {
 }
 
 model eval_students {
-  id             BigInt           @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   firstName      String           @db.VarChar(20)
   lastName       String           @db.VarChar(20)
   eval_summaries eval_summaries[]
 }
 
 model eval_summaries {
-  id               BigInt            @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   summary          String            @db.LongText
   content_score    Decimal           @db.Decimal(5, 2)
-  student_id       BigInt?
+  student_id       Int?
   submitted_on     DateTime?         @db.Date
   wording_score    Decimal           @db.Decimal(5, 2)
-  question_id      BigInt?
+  question_id      Int?
   eval_assignments eval_assignments? @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eval_summaries_question_id_230773e4_fk_eval_assignments_id")
   eval_students    eval_students?    @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eval_summaries_student_id_a92937bb_fk_eval_students_id")
 
@@ -155,14 +155,14 @@ model eval_summaries {
 }
 
 model eval_teachers {
-  id               BigInt             @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   firstName        String             @db.VarChar(20)
   lastName         String             @db.VarChar(20)
   eval_assignments eval_assignments[]
 }
 
 model eval_text {
-  id               BigInt             @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   title            String             @db.VarChar(20)
   text             String             @db.LongText
   eval_assignments eval_assignments[]
