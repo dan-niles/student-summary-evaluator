@@ -233,7 +233,7 @@ export const AssignmentStepper = () => {
                     Text
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    {(assignmentDetails.eval_text.text === "")? "Custom Text" : assignmentDetails.eval_text.text}
+                    {assignmentDetails.eval_text.text}
                   </Typography>
                   <TextField
                     label="Your Answer"
@@ -284,7 +284,6 @@ export const AssignmentStepper = () => {
                 color="inherit"
                 disabled={activeStep === 0}
                 onClick={handleBack}
-                variant="outlined"
                 sx={{ mr: 1 }}
               >
                 Back
@@ -294,37 +293,15 @@ export const AssignmentStepper = () => {
                 variant="outlined"
                 onClick={() => {
                   if (activeStep === steps.length - 1) {
-                    <Dialog
-                      open={open}
-                      onClose={handleClose}
-                      PaperComponent={PaperComponent}
-                      aria-labelledby="draggable-dialog-title"
-                    >
-                      <DialogTitle
-                        style={{ cursor: "move" }}
-                        id="draggable-dialog-title"
-                      >
-                        Subscribe
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          To subscribe to this website, please enter your email
-                          address here. We will send updates occasionally.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button autoFocus onClick={handleClose}>
-                          Cancel
-                        </Button>
-                        <Button onClick={handleClose}>Subscribe</Button>
-                      </DialogActions>
-                    </Dialog>;
+                    // If it's the "Submit" button
+                    alert("Submitting your answer...");
+                    // You can perform the submission logic here if needed
                   } else {
                     handleNext(); // For the "Next" button
                   }
                 }}
                 disabled={
-                  selectedAssignmentId === 0 ||
+                  selectedAssignmentId == 0 ||
                   (activeStep === 1 && answer === "")
                 }
               >
