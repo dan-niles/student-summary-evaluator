@@ -13,11 +13,7 @@ const jsonParser = (data) => {
 export default async function handler(req, res) {
 	if (req.method === "GET") {
 		try {
-			const summaries = await prisma.eval_summaries.findMany({
-				include: {
-					eval_text: true,
-				},
-			});
+			const summaries = await prisma.eval_summaries.findMany();
 			res.status(200).json({ summaries: jsonParser(summaries) });
 		} catch (err) {
 			console.log(err);

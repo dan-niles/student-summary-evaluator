@@ -25,51 +25,51 @@ const statusMap = {
 };
 
 export const OverviewLatestOrders = (props) => {
-  const { orders = [], sx } = props;
+  const { submissions = [], sx } = props;
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Orders" />
+      <CardHeader title="Submissions" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  Order
+                  Question ID
                 </TableCell>
                 <TableCell>
-                  Customer
+                  Student
                 </TableCell>
-                <TableCell sortDirection="desc">
+                {/* <TableCell sortDirection="desc">
                   Date
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   Status
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => {
-                const createdAt = format(order.createdAt, 'dd/MM/yyyy');
+              {submissions.map((submission) => {
+                //const createdAt = format(submission.createdAt, 'dd/MM/yyyy');
 
                 return (
                   <TableRow
                     hover
-                    key={order.id}
+                    key={submission.id}
                   >
                     <TableCell>
-                      {order.ref}
+                      {submission.ref}
                     </TableCell>
                     <TableCell>
-                      {order.customer.name}
+                      {submission.student.name}
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       {createdAt}
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
-                      <SeverityPill color={statusMap[order.status]}>
-                        {order.status}
+                      <SeverityPill color={statusMap[submission.status]}>
+                        {submission.status}
                       </SeverityPill>
                     </TableCell>
                   </TableRow>

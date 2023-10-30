@@ -17,6 +17,9 @@ export default async function handler(req, res) {
     where: {
      question_id: req.query.id,
     },
+    include:{
+        eval_students:true
+    }
    });
    res.status(200).json({ summaries: jsonParser(summaries) });
   } catch (err) {
