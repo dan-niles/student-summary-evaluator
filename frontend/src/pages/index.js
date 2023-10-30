@@ -78,6 +78,7 @@ const Page = (props) => {
 	const[wordingScores, setwordingScores] = useState([])
 	const[totalScores, setTotalScores] = useState([])
 	const[submissions, setSubmission] = useState([])
+	const[studentcount, setStudentCount] = useState(0)
     //const[assignment,setAssignment] = useState("")
 	
 	const { __clerk_ssr_state, assignments,contentValues } = props;
@@ -88,13 +89,14 @@ const Page = (props) => {
 		const fetchStudentCount = async () => {
 			try {
 				const res = await axios.get('/api/dashboard/students/');
-				console.log()
+				setStudentCount(res.data.totalStudents)
 
 			} catch (error) {
 				// Handle any errors here, such as network issues or failed requests.
 				console.error('Error updating assignmentID:', error);
 			  }
 		}
+		fetchStudentCount();
 	}, []);
 
 	useEffect(() => {
@@ -196,7 +198,7 @@ const Page = (props) => {
 								difference={16}
 								positive={false}
 								sx={{ height: "100%" }}
-								value="1.6k"
+								value={studentcount}
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
