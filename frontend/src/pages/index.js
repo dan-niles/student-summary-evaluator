@@ -104,9 +104,9 @@ const Page = (props) => {
 	const { __clerk_ssr_state, assignments,contentValues } = props;
 
 	useEffect(() => {
-		// if (typeof window !== "undefined" && window.localStorage) {
-		// 	localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
-		// }
+		if (typeof window !== "undefined" && window.localStorage) {
+			localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
+		}
 		const fetchStudentCount = async () => {
 			try {
 				const res = await axios.get('/api/dashboard/students/');
@@ -319,10 +319,10 @@ const Page = (props) => {
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;
 
 export const getServerSideProps = async (ctx) => {
-	//const { userId } = getAuth(ctx.req);
+	const { userId } = getAuth(ctx.req);
 
-	//const user = userId ? await clerkClient.users.getUser(userId) : undefined;
-    const userId = 1
+	const user = userId ? await clerkClient.users.getUser(userId) : undefined;
+    //const userId = 1
     const assignments = await prisma.eval_assignments.findMany({
 		where: {
 			createdBy_id: userId, 
