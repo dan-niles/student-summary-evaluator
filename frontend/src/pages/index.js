@@ -24,6 +24,27 @@ const now = new Date();
 const prisma = new PrismaClient();
 
 
+const calculate = (arrayValues) => {
+	const ranges = [];
+	const counts = [];
+  
+	// Define the ranges and initialize counts to zero
+	for (let i = 10; i <= 100; i += 10) {
+	  ranges.push({ min: i, max: i + 10 });
+	  counts.push(0);
+	}
+	for (const value of arrayValues) {
+	  for (let i = 0; i < ranges.length; i++) {
+		if (value >= ranges[i].min && value <= ranges[i].max) {
+		  counts[i]++;
+		  break; 
+		}
+	  }
+	}
+	return counts;
+  };
+
+
 const Page = (props) => {
 	const[assignmentID,setAssignmentID] = useState(0)
 	const[contentScores, setcontentScores] = useState([])
@@ -44,8 +65,8 @@ const Page = (props) => {
 				// Send a POST request to the API route to update the assignmentID on the server using Axios.
 				const res = await axios.get('/api/dashboard/summaries/'+assignmentID);
 				const data = res.data
-				const contentScores = data.summaries.map(summary => summary.content_score);
-				const wordingScores = data.summaries.map(summary => summary.wording_score);
+				const contentScores = calculate(data.summaries.map(summary => summary.content_score));
+				const wordingScores = calculate(data.summaries.map(summary => summary.wording_score));
 				setcontentScores(contentScores)
 				setwordingScores(wordingScores)
 
@@ -128,21 +149,33 @@ const Page = (props) => {
 						<Grid xs={12} sm={6} lg={3}>
 							<OverviewTotalProfit sx={{ height: "100%" }} value="$15k" />
 						</Grid>
-						<Grid xs={12} lg={8}>
+						<Grid xs={6} lg={4}>
 							<OverviewSales
 								chartSeries={[
 									{
 										name: "This year",
 										data: contentScores,
 									},
+								]}
+								sx={{ height: "100%" }}
+								categories = {["0-10", "10-20", "20-30","30-40","40-50","50-60","60-70","70-80","80-90","90-100" ]}
+								title = "Content Score"
+							/>
+							
+						</Grid>
+						<Grid xs={6} lg={4}>
+							<OverviewSales
+								chartSeries={[
 									{
 										name: "last year",
 										data: wordingScores,
 									},
 								]}
 								sx={{ height: "100%" }}
-								categories = {["10", "20", "30"]}
+								categories = {["0-10", "10-20", "20-30","30-40","40-50","50-60","60-70","70-80","80-90","90-100" ]}
+								title = "Wording Score"
 							/>
+							
 						</Grid>
 						<Grid xs={12} md={6} lg={4}>
 							<OverviewTraffic

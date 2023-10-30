@@ -84,7 +84,7 @@ const useChartOptions = (categories) => {
     },
     yaxis: {
       labels: {
-        formatter: (value) => (value > 0 ? `${value}K` : `${value}`),
+        formatter: (value) => (`${value}`),
         offsetX: -10,
         style: {
           colors: theme.palette.text.secondary
@@ -98,7 +98,7 @@ const useChartOptions = (categories) => {
 
 
 export const OverviewSales = (props) => {
-  const { chartSeries, sx, categories } = props;
+  const { chartSeries, sx, categories,title } = props;
 
   const chartOptions = useChartOptions(categories);
 
@@ -118,7 +118,7 @@ export const OverviewSales = (props) => {
             Sync
           </Button>
         )}
-        title="Sales"
+        title={title}
       />
       <CardContent>
         <Chart
