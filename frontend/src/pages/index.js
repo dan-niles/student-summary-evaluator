@@ -23,6 +23,17 @@ const now = new Date();
 
 const prisma = new PrismaClient();
 
+const taskProgress = (data, enrolledStudents) => {
+    let complete = 0;
+	data.summaries.forEach(item => {
+		if (item.submitted) {
+		  complete += 1;
+		}
+	  });
+	return complete/enrolledStudents * 100
+	 
+}
+
 const getSubmissions = (data) =>{
 	return data.summaries.map(item => ({
 		id: item.id || '',
@@ -79,6 +90,7 @@ const Page = (props) => {
 	const[totalScores, setTotalScores] = useState([])
 	const[submissions, setSubmission] = useState([])
 	const[studentcount, setStudentCount] = useState(0)
+	const[studentsenrolled, setStudentsenrolled] = useState(0)
     //const[assignment,setAssignment] = useState("")
 	
 	const { __clerk_ssr_state, assignments,contentValues } = props;
@@ -106,6 +118,7 @@ const Page = (props) => {
 				// Send a POST request to the API route to update the assignmentID on the server using Axios.
 				const res = await axios.get('/api/dashboard/summaries/'+assignmentID);
 				const data = res.data
+				setStudentsenrolled(data.summaries.length)
 				const contentScores = calculate(data.summaries.map(summary => summary.content_score));
 				const wordingScores = calculate(data.summaries.map(summary => summary.wording_score));
 				const totalScores = data.summaries.map(summary => {
@@ -205,7 +218,7 @@ const Page = (props) => {
 							<OverviewTasksProgress sx={{ height: "100%" }} value={75.5} />
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTotalProfit sx={{ height: "100%" }} value="$15k" />
+							<OverviewTotalProfit sx={{ height: "100%" }} value={studentsenrolled} />
 						</Grid>
 						<Grid xs={6} lg={4}>
 							<OverviewSales
