@@ -25,6 +25,10 @@ export const AssignmentCard = (props) => {
 		props.setDeleteID(assignment.id);
 		props.setOpenDeleteModal(true);
 	};
+	const handleViewClick = () => {
+		props.setViewID(assignment.id);
+		props.setOpenViewModal(true);
+	};
 
 	return (
 		<Card
@@ -43,7 +47,11 @@ export const AssignmentCard = (props) => {
 				</Typography>
 			</CardContent>
 			<CardActions className="px-6 mb-3 flex">
-				<Button size="small" startIcon={<VisibilityIcon />}>
+				<Button
+					size="small"
+					startIcon={<VisibilityIcon />}
+					onClick={handleViewClick}
+				>
 					View
 				</Button>
 				<Button variant="outlined" size="small" startIcon={<EditIcon />}>

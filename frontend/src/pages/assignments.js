@@ -17,12 +17,16 @@ import { CreateAssignmentBtn } from "src/sections/assignments/create-assignment-
 import { AddStudentsModal } from "src/sections/assignments/add-students";
 import { DeleteAssignmentModal } from "src/sections/assignments/delete-assignment";
 import { useState, useEffect } from "react";
+import { ViewAssignmentModal } from "src/sections/assignments/view-assignment";
 import axios from "axios";
 
 const Page = () => {
 	const [assignments, setAssignments] = useState([]);
 	const [openStudentsModal, setOpenStudentsModal] = useState(false);
+	const [openViewModal, setOpenViewModal] = useState(false);
 	const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+	const [viewID, setViewID] = useState(1);
 	const [deleteID, setDeleteID] = useState(null);
 
 	const getAssignments = async () => {
@@ -105,6 +109,8 @@ const Page = () => {
 										setOpenStudentsModal={setOpenStudentsModal}
 										setOpenDeleteModal={setOpenDeleteModal}
 										setDeleteID={setDeleteID}
+										setViewID={setViewID}
+										setOpenViewModal={setOpenViewModal}
 									/>
 								</Grid>
 							))}
@@ -120,6 +126,11 @@ const Page = () => {
 					setOpenDeleteModal={setOpenDeleteModal}
 					deleteID={deleteID}
 					getAssignments={getAssignments}
+				/>
+				<ViewAssignmentModal
+					viewID={viewID}
+					openViewModal={openViewModal}
+					setOpenViewModal={setOpenViewModal}
 				/>
 			</Box>
 		</>
