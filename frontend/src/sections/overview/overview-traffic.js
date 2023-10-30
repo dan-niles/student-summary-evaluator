@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
-import ComputerDesktopIcon from '@heroicons/react/24/solid/ComputerDesktopIcon';
+import { BsEmojiSmile } from "react-icons/bs";
+import { BsEmojiNeutralFill } from "react-icons/bs";
+import {FaRegFaceSadCry } from "react-icons/fa6";
+import ComputerDesktopIcon from '@heroicons/react/24/solid/DeviceTabletIcon'
 import DeviceTabletIcon from '@heroicons/react/24/solid/DeviceTabletIcon';
 import PhoneIcon from '@heroicons/react/24/solid/PhoneIcon';
 import {
@@ -63,19 +66,19 @@ const useChartOptions = (labels) => {
 };
 
 const iconMap = {
-  Desktop: (
+  Best: (
     <SvgIcon>
-      <ComputerDesktopIcon />
+      <BsEmojiSmile />
     </SvgIcon>
   ),
-  Tablet: (
+  Normal: (
     <SvgIcon>
-      <DeviceTabletIcon />
+      <BsEmojiNeutralFill />
     </SvgIcon>
   ),
-  Phone: (
+  Low: (
     <SvgIcon>
-      <PhoneIcon />
+      <FaRegFaceSadCry />
     </SvgIcon>
   )
 };
@@ -86,7 +89,7 @@ export const OverviewTraffic = (props) => {
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Traffic Source" />
+      <CardHeader title="Overall Score"/>
       <CardContent>
         <Chart
           height={300}

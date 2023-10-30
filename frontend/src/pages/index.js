@@ -35,7 +35,21 @@ const getSubmissions = (data) =>{
 	  }));
 	};
 
-
+const getRangeValues = (arrayValues) => {
+	const ranges = [{ min: 0, max: 35 }, { min: 35, max: 75 }, { min: 75, max: 100 }];
+	const counts = new Array(ranges.length).fill(0);
+	
+	for (const value of arrayValues) {
+		for (let i = 0; i < ranges.length; i++) {
+		if (value >= ranges[i].min && value < ranges[i].max) {
+			counts[i]++;
+			break;
+		}
+		}
+	}
+	
+	return counts;
+	};
 
 const calculate = (arrayValues) => {
 	const ranges = [];
@@ -62,6 +76,7 @@ const Page = (props) => {
 	const[assignmentID,setAssignmentID] = useState(1)
 	const[contentScores, setcontentScores] = useState([])
 	const[wordingScores, setwordingScores] = useState([])
+	const[totalScores, setTotalScores] = useState([])
 	const[submissions, setSubmission] = useState([])
     //const[assignment,setAssignment] = useState("")
 	
@@ -81,13 +96,25 @@ const Page = (props) => {
 				const data = res.data
 				const contentScores = calculate(data.summaries.map(summary => summary.content_score));
 				const wordingScores = calculate(data.summaries.map(summary => summary.wording_score));
+				const totalScores = data.summaries.map(summary => {
+					const contentScore = parseFloat(summary.content_score);
+					const wordingScore = parseFloat(summary.wording_score);
+				  
+					// Check if parsing was successful before adding
+					if (!isNaN(contentScore) && !isNaN(wordingScore)) {
+					  return (contentScore + wordingScore)/2;
+					}
+				  
+					// Handle cases where parsing fails (e.g., non-numeric values)
+					return 0; // You can choose a different default value if needed
+				  });;
 				setcontentScores(contentScores)
 				setwordingScores(wordingScores)
-
+				setTotalScores(getRangeValues(totalScores))
 				// const res1 = await axios.get('/api/dashboard/summaries/');
                 // console.log(res1.data.summaries)
 				setSubmission(getSubmissions(data))
-				console.log(submissions)
+				//console.log(totalScores)
 
 			  } catch (error) {
 				// Handle any errors here, such as network issues or failed requests.
@@ -106,7 +133,7 @@ const Page = (props) => {
 		setAssignmentID(selectedQ?.id);
 
 
-		console.log(contentValues)
+		
 	};
 
 	return (
@@ -198,12 +225,12 @@ const Page = (props) => {
 						</Grid>
 						<Grid xs={12} md={6} lg={4}>
 							<OverviewTraffic
-								chartSeries={[63, 15, 22]}
-								labels={["Desktop", "Tablet", "Phone"]}
+								chartSeries={totalScores}
+								labels={["Low", "Normal", "Best"]}
 								sx={{ height: "100%" }}
 							/>
 						</Grid>
-						<Grid xs={12} md={6} lg={4}>
+						{/* <Grid xs={12} md={6} lg={4}>
 							<OverviewLatestProducts
 								products={[
 									{
@@ -239,8 +266,8 @@ const Page = (props) => {
 								]}
 								sx={{ height: "100%" }}
 							/>
-						</Grid>
-						<Grid xs={12} md={12} lg={8}>
+						</Grid> */}
+						<Grid xs={12} md={12} lg={12}>
 							<OverviewLatestOrders
 								submissions={submissions}
 								sx={{ height: "100%" }}
