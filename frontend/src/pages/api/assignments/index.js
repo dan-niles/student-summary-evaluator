@@ -46,5 +46,17 @@ export default async function handler(req, res) {
 			console.log(err);
 			res.status(500).json({ error: "failed to load data" });
 		}
+	} else if (req.method == "DELETE") {
+		try {
+			const assignment = await prisma.eval_assignments.delete({
+				where: {
+					id: req.body.id,
+				},
+			});
+			res.status(200).json({ assignment: jsonParser(assignment) });
+		} catch (err) {
+			console.log(err);
+			res.status(500).json({ error: "failed to load data" });
+		}
 	}
 }
