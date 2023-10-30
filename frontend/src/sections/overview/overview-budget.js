@@ -24,7 +24,7 @@ export const OverviewBudget = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Budget
+              Your Assignments
             </Typography>
             <Typography variant="h4">
               {value}

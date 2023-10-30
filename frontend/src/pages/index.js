@@ -26,11 +26,13 @@ const prisma = new PrismaClient();
 const taskProgress = (data, enrolledStudents) => {
     let complete = 0;
 	data.summaries.forEach(item => {
-		if (item.submitted) {
+		console.log(item.is_submitted)
+		if (item.is_submitted) {
 		  complete += 1;
 		}
 	  });
-	return complete/enrolledStudents * 100
+
+	return (complete/enrolledStudents * 100).toFixed(1)
 	 
 }
 
@@ -91,8 +93,11 @@ const Page = (props) => {
 	const[submissions, setSubmission] = useState([])
 	const[studentcount, setStudentCount] = useState(0)
 	const[studentsenrolled, setStudentsenrolled] = useState(0)
+	const[studentcompleted, setStudentcompleted] = useState(0)
     //const[assignment,setAssignment] = useState("")
 	
+	
+
 	const { __clerk_ssr_state, assignments,contentValues } = props;
 	useEffect(() => {
 		// if (typeof window !== "undefined" && window.localStorage) {
@@ -132,14 +137,17 @@ const Page = (props) => {
 				  
 					// Handle cases where parsing fails (e.g., non-numeric values)
 					return 0; // You can choose a different default value if needed
-				  });;
+				  });
+				
+
 				setcontentScores(contentScores)
 				setwordingScores(wordingScores)
 				setTotalScores(getRangeValues(totalScores))
 				// const res1 = await axios.get('/api/dashboard/summaries/');
                 // console.log(res1.data.summaries)
 				setSubmission(getSubmissions(data))
-				//console.log(totalScores)
+				console.log(studentsenrolled)
+				setStudentcompleted(taskProgress(data,studentsenrolled))
 
 			  } catch (error) {
 				// Handle any errors here, such as network issues or failed requests.
@@ -158,7 +166,6 @@ const Page = (props) => {
 		setAssignmentID(selectedQ?.id);
 
 
-		
 	};
 
 	return (
@@ -181,8 +188,8 @@ const Page = (props) => {
 						fullWidth
 						id="exampleFormControlSelect"
 						select
-						label="Title"
-						helperText="Please select your title"
+						label="Assignment"
+						helperText="Please select your assignement"
 						onChange={handleSelectChange}
 					>
 						{assignments.map((assignment, index) => (
@@ -203,7 +210,7 @@ const Page = (props) => {
 								difference={12}
 								positive
 								sx={{ height: "100%" }}
-								value="$24k"
+								value = {5}
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
@@ -215,7 +222,7 @@ const Page = (props) => {
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTasksProgress sx={{ height: "100%" }} value={75.5} />
+							<OverviewTasksProgress sx={{ height: "100%" }} value={studentcompleted} />
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
 							<OverviewTotalProfit sx={{ height: "100%" }} value={studentsenrolled} />

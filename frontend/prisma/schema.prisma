@@ -120,7 +120,7 @@ model django_session {
 
 model eval_assignments {
   id             BigInt           @id @default(autoincrement())
-  question       String           @db.VarChar(50)
+  question       String           @db.VarChar(500)
   deadline       DateTime?        @db.Date
   createdBy_id   BigInt
   textTitle_id   BigInt
@@ -147,6 +147,7 @@ model eval_summaries {
   submitted_on     DateTime?         @db.Date
   wording_score    Decimal           @db.Decimal(5, 2)
   question_id      BigInt?
+  is_submitted     Boolean
   eval_assignments eval_assignments? @relation(fields: [question_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eval_summaries_question_id_230773e4_fk_eval_assignments_id")
   eval_students    eval_students?    @relation(fields: [student_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "eval_summaries_student_id_a92937bb_fk_eval_students_id")
 
@@ -163,7 +164,7 @@ model eval_teachers {
 
 model eval_text {
   id               BigInt             @id @default(autoincrement())
-  title            String             @db.VarChar(20)
+  title            String             @db.VarChar(200)
   text             String             @db.LongText
   eval_assignments eval_assignments[]
 }
