@@ -15,9 +15,11 @@ import {
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import dayjs from "dayjs";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import axios from "axios";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
+const ReactQuill = dynamic(import("react-quill"), { ssr: false });
 
 const style = {
 	position: "absolute",
