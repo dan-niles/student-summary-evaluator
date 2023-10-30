@@ -17,6 +17,8 @@ import { getAuth, buildClerkProps } from "@clerk/nextjs/server";
 import { useEffect,useState } from "react";
 import { PrismaClient } from '@prisma/client'
 
+import axios from 'axios';
+
 const now = new Date();
 
 const prisma = new PrismaClient();
@@ -24,6 +26,8 @@ const prisma = new PrismaClient();
 
 const Page = (props) => {
 	const[assignmentID,setAssignmentID] = useState(0)
+	const[contentScores, setcontentScores] = useState([])
+	const[wordingScores, setwordingScores] = useState([])
     //const[assignment,setAssignment] = useState("")
 	
 	const { __clerk_ssr_state, assignments,contentValues } = props;
@@ -32,14 +36,36 @@ const Page = (props) => {
 			localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
 		}
 	}, []);
-     
 
-    const handleSelectChange = (event) => {
+	useEffect(() => {
+		const fetchSummaryData = async () => {
+		
+			try {
+				// Send a POST request to the API route to update the assignmentID on the server using Axios.
+				const res = await axios.get('/api/dashboard/summaries/'+assignmentID);
+				const data = res.data
+				const contentScores = data.summaries.map(summary => summary.content_score);
+				const wordingScores = data.summaries.map(summary => summary.wording_score);
+				setcontentScores(contentScores)
+				setwordingScores(wordingScores)
+
+			  } catch (error) {
+				// Handle any errors here, such as network issues or failed requests.
+				console.error('Error updating assignmentID:', error);
+			  }
+		}
+		
+		fetchSummaryData();
+	}, [assignmentID]);
+     
+    
+    const handleSelectChange = async (event) => {
 		const selectedValue = event.target.value;
 		const selectedQ = assignments.find((assignment) => assignment.question === selectedValue);
 
 		setAssignmentID(selectedQ?.id);
-		
+
+
 		console.log(contentValues)
 	};
 
@@ -107,15 +133,15 @@ const Page = (props) => {
 								chartSeries={[
 									{
 										name: "This year",
-										data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20],
+										data: contentScores,
 									},
 									{
 										name: "last year",
-										data: [12, 36, 14, 3, 2, 24, 4, 19, 12, 15, 11, 10],
+										data: wordingScores,
 									},
 								]}
 								sx={{ height: "100%" }}
-								assignmentid = {assignmentID}
+								categories = {["10", "20", "30"]}
 							/>
 						</Grid>
 						<Grid xs={12} md={6} lg={4}>
@@ -244,16 +270,18 @@ export const getServerSideProps = async (ctx) => {
 	const user = userId ? await clerkClient.users.getUser(userId) : undefined;
 
     const assignments = await prisma.eval_assignments.findMany()
-	const { assignmentID } = ctx.req.session.assignmentID || 0;
-	console.log(assignmentID)
-	const contentValues = await prisma.eval_summaries.findMany({
-		where: {
-		  question_id: assignmentID, // Replace 'id' with your actual field name and 'specificId' with the value you want to query by.
-		},
-		select: {
-		 content_score: true, // Specify the field you want to retrieve
-		},
-	  });
+	
+	
+	// const { assignmentID } = ctx.req.session.assignmentID || 0;
+	// console.log(assignmentID)
+	// const contentValues = await prisma.eval_summaries.findMany({
+	// 	where: {
+	// 	  question_id: assignmentID, // Replace 'id' with your actual field name and 'specificId' with the value you want to query by.
+	// 	},
+	// 	select: {
+	// 	 content_score: true, // Specify the field you want to retrieve
+	// 	},
+	//   });
     
 	return { props: { ...buildClerkProps(ctx.req, { user }), 
 	assignments: JSON.parse(

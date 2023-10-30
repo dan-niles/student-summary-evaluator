@@ -16,7 +16,7 @@ import { Chart } from 'src/components/chart';
 import { useEffect, useState } from 'react';
 
 
-const useChartOptions = () => {
+const useChartOptions = (categories) => {
   const theme = useTheme();
 
   return {
@@ -74,20 +74,7 @@ const useChartOptions = () => {
         color: theme.palette.divider,
         show: true
       },
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-      ],
+      categories: categories,
       labels: {
         offsetY: 5,
         style: {
@@ -111,9 +98,9 @@ const useChartOptions = () => {
 
 
 export const OverviewSales = (props) => {
-  const { chartSeries, sx, assignmentid} = props;
+  const { chartSeries, sx, categories } = props;
 
-  const chartOptions = useChartOptions();
+  const chartOptions = useChartOptions(categories);
 
   return (
     <Card sx={sx}>
