@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import {
 	Box,
@@ -16,6 +17,7 @@ import dayjs from "dayjs";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import axios from "axios";
 
 const style = {
 	position: "absolute",
@@ -40,6 +42,23 @@ export const CreateAssignmentBtn = () => {
 	const [question, setQuestion] = React.useState("");
 	const [text, setText] = React.useState("");
 	const [deadline, setDeadline] = React.useState(dayjs());
+
+	const handleSubmit = async () => {
+		try {
+			const res = await axios.post("/api/assignments", {
+				title,
+				question,
+				text,
+				deadline: deadline.$d,
+				user_id: "1",
+			});
+			if (res.status === 200) {
+				handleClose();
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	return (
 		<div>
@@ -100,7 +119,9 @@ export const CreateAssignmentBtn = () => {
 							/>
 						</CardContent>
 						<CardActions className="justify-end pr-6 pb-4">
-							<Button size="small">Create Assignment</Button>
+							<Button size="small" onClick={handleSubmit}>
+								Create Assignment
+							</Button>
 						</CardActions>
 					</Card>
 				</Box>
