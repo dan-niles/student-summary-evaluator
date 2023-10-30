@@ -18,6 +18,9 @@ export default async function handler(req, res) {
 				where: {
 					id: req.query.id,
 				},
+				include: {
+					eval_text: true,
+				},
 			});
 			res.status(200).json({ assignments: jsonParser(assignments) });
 		} catch (err) {
