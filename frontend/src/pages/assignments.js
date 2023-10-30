@@ -14,11 +14,13 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { AssignmentCard } from "src/sections/assignments/assignment-card";
 import { AssignmentsSearch } from "src/sections/assignments/assignments-search";
 import { CreateAssignmentBtn } from "src/sections/assignments/create-assignment-btn";
+import { AddStudentsModal } from "src/sections/assignments/add-students";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Page = () => {
 	const [assignments, setAssignments] = useState([]);
+	const [openStudentsModal, setOpenStudentsModal] = useState(false);
 
 	const getAssignments = async () => {
 		try {
@@ -31,7 +33,7 @@ const Page = () => {
 							createdAt: "31/10/2023",
 							description: assignment.question.slice(0, 100) + "...",
 							title: assignment.eval_text.title,
-							downloads: "4",
+							downloads: "3",
 						};
 					}
 				);
@@ -95,12 +97,19 @@ const Page = () => {
 						<Grid container spacing={3}>
 							{assignments.map((assignment) => (
 								<Grid xs={12} md={6} lg={4} key={assignment.id}>
-									<AssignmentCard assignment={assignment} />
+									<AssignmentCard
+										assignment={assignment}
+										setOpenStudentsModal={setOpenStudentsModal}
+									/>
 								</Grid>
 							))}
 						</Grid>
 					</Stack>
 				</Container>
+				<AddStudentsModal
+					openStudentsModal={openStudentsModal}
+					setOpenStudentsModal={setOpenStudentsModal}
+				/>
 			</Box>
 		</>
 	);

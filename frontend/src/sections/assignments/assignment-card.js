@@ -20,6 +20,7 @@ import {
 
 export const AssignmentCard = (props) => {
 	const { assignment } = props;
+	const handleOpen = () => props.setOpenStudentsModal(true);
 
 	return (
 		<Card
@@ -38,7 +39,7 @@ export const AssignmentCard = (props) => {
 				</Typography>
 			</CardContent>
 			<CardActions className="px-6 mb-3 flex">
-				<Button variant="contained" size="small" startIcon={<VisibilityIcon />}>
+				<Button size="small" startIcon={<VisibilityIcon />}>
 					View
 				</Button>
 				<Button variant="outlined" size="small" startIcon={<EditIcon />}>
@@ -73,8 +74,13 @@ export const AssignmentCard = (props) => {
 					<SvgIcon color="action" fontSize="small">
 						<UserGroupIcon />
 					</SvgIcon>
-					<Typography color="text.secondary" display="inline" variant="body2">
-						{assignment.downloads} Students
+					<Typography
+						color="text.secondary"
+						display="inline"
+						variant="body2"
+						onClick={handleOpen}
+					>
+						<Button>{assignment.downloads} Students</Button>
 					</Typography>
 				</Stack>
 			</Stack>
