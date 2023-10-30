@@ -32,6 +32,7 @@ const taskProgress = (data, enrolledStudents) => {
 	  });
 
     if (!enrolledStudents){
+		console.log(enrolledStudents)
 		return 0
 	}
 	return (complete/enrolledStudents * 100).toFixed(1)
@@ -149,7 +150,7 @@ const Page = (props) => {
 				// const res1 = await axios.get('/api/dashboard/summaries/');
                 // console.log(res1.data.summaries)
 				setSubmission(getSubmissions(data))
-				console.log(studentsenrolled)
+				
 				setStudentcompleted(taskProgress(data,studentsenrolled))
 
 			  } catch (error) {
