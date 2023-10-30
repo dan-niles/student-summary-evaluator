@@ -27,7 +27,7 @@ const style = {
 	width: 600,
 };
 
-export const CreateAssignmentBtn = () => {
+export const CreateAssignmentBtn = (props) => {
 	const [open, setOpen] = React.useState(false);
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => {
@@ -53,6 +53,7 @@ export const CreateAssignmentBtn = () => {
 				user_id: "1",
 			});
 			if (res.status === 200) {
+				props.getAssignments();
 				handleClose();
 			}
 		} catch (err) {

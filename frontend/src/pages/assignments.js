@@ -19,29 +19,31 @@ import axios from "axios";
 
 const Page = () => {
 	const [assignments, setAssignments] = useState([]);
-	useEffect(() => {
-		const getAssignments = async () => {
-			try {
-				const res = await axios.get("/api/assignments");
-				if (res.status === 200) {
-					const mapped_assignments = res.data.assignments.map(
-						(assignment, idx) => {
-							return {
-								id: idx,
-								createdAt: "04/04/2019",
-								description: assignment.question.slice(0, 100) + "...",
-								title: assignment.eval_text.title,
-								downloads: "4",
-							};
-						}
-					);
-					console.log(mapped_assignments);
-					setAssignments(mapped_assignments);
-				}
-			} catch (err) {
-				console.log(err);
+
+	const getAssignments = async () => {
+		try {
+			const res = await axios.get("/api/assignments");
+			if (res.status === 200) {
+				const mapped_assignments = res.data.assignments.map(
+					(assignment, idx) => {
+						return {
+							id: idx,
+							createdAt: "31/10/2023",
+							description: assignment.question.slice(0, 100) + "...",
+							title: assignment.eval_text.title,
+							downloads: "4",
+						};
+					}
+				);
+				console.log(mapped_assignments);
+				setAssignments(mapped_assignments);
 			}
-		};
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	useEffect(() => {
 		getAssignments();
 	}, []);
 
@@ -86,7 +88,7 @@ const Page = () => {
 								</Stack>
 							</Stack>
 							<div>
-								<CreateAssignmentBtn />
+								<CreateAssignmentBtn getAssignments={getAssignments} />
 							</div>
 						</Stack>
 						<AssignmentsSearch />
