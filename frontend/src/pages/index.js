@@ -20,11 +20,13 @@ import { PrismaClient } from '@prisma/client'
 const now = new Date();
 
 const prisma = new PrismaClient();
-const[assignmentID,setAssignmentID] = useState(0)
+
+
 const Page = (props) => {
+	const[assignmentID,setAssignmentID] = useState(0)
     //const[assignment,setAssignment] = useState("")
 	
-	const { __clerk_ssr_state, assignments } = props;
+	const { __clerk_ssr_state, assignments,contentValues } = props;
 	useEffect(() => {
 		if (typeof window !== "undefined" && window.localStorage) {
 			localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
@@ -37,7 +39,8 @@ const Page = (props) => {
 		const selectedQ = assignments.find((assignment) => assignment.question === selectedValue);
 
 		setAssignmentID(selectedQ?.id);
-		console.log(assignmentID);
+		
+		console.log(contentValues)
 	};
 
 	return (
@@ -241,21 +244,27 @@ export const getServerSideProps = async (ctx) => {
 	const user = userId ? await clerkClient.users.getUser(userId) : undefined;
 
     const assignments = await prisma.eval_assignments.findMany()
-	const { assignmentID } = ctx.query;
+	const { assignmentID } = ctx.req.session.assignmentID || 0;
+	console.log(assignmentID)
 	const contentValues = await prisma.eval_summaries.findMany({
 		where: {
 		  question_id: assignmentID, // Replace 'id' with your actual field name and 'specificId' with the value you want to query by.
 		},
 		select: {
-		 contentValues: true, // Specify the field you want to retrieve
+		 content_score: true, // Specify the field you want to retrieve
 		},
 	  });
-    console.log(contentValues)
+    
 	return { props: { ...buildClerkProps(ctx.req, { user }), 
 	assignments: JSON.parse(
 		JSON.stringify(assignments, (key, value) =>
 		typeof value === 'bigint' ? value.toString() : value)
-	) }};
+	),
+    contentValues : JSON.parse(
+		JSON.stringify(assignments, (key, value) =>
+		typeof value === 'bigint' ? value.toString() : value)
+	),   
+}};
 };
 
 export default Page;
