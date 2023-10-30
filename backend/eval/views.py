@@ -56,7 +56,7 @@ class SummaryView(APIView):
     def get(self, request, format=None):
         global input_summary
         # prompt_id = Text.objects.filter(pk=text_id).first().prompt_id
-        prompt_id = "ebad26"
+        prompt_id = "39c16e"
 
         # input_summary = 'They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it.'
 

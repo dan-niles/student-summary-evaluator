@@ -24,6 +24,8 @@ from sklearn.model_selection import KFold, GroupKFold
 from tqdm import tqdm
 
 import nltk
+
+# nltk.download('stopwords')
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.tokenize.treebank import TreebankWordDetokenizer
@@ -59,9 +61,9 @@ tqdm.pandas()
 #         tokenizer = AutoTokenizer.from_pretrained("tokenizer")
 #         return tokenizer
 
-prompt_id = "ebad26"
-student_id = "20003432"
-input_summary = "They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it."
+# prompt_id = "ebad26"
+# student_id = "20003432"
+# input_summary = 'They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it.'
 
 
 def get_content_and_wording(prompt_id, student_id, input_summary):
