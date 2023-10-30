@@ -33,7 +33,8 @@ class SummaryView(APIView):
         global input_summary,text_id
         input_summary = request.data.get('summary')
         text_id = request.data.get('text')
-        prompt_id = Text.objects.filter(pk=text_id).first().prompt_id
+        # prompt_id = Text.objects.filter(pk=text_id).first().prompt_id
+        prompt_id = "39c16e"
         student_id = request.data.get('text')
         # input_summary = 'They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it.'
         content_value, wording_value = get_content_and_wording(prompt_id, student_id, input_summary)
@@ -43,7 +44,7 @@ class SummaryView(APIView):
     def get(self, request, format=None):
         global input_summary
         # prompt_id = Text.objects.filter(pk=text_id).first().prompt_id
-        prompt_id = "ebad26"
+        prompt_id = "39c16e"
         
         # input_summary = 'They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it.'
 
