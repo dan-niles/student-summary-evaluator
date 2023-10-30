@@ -2,6 +2,13 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Text, Summaries
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from backend.model import get_content_and_wording
+
+
 # from rest_framework.response import Response
 # from rest_framework.decorators import api_view
 from .serializers import TextSerializer, SummariesSerializer
@@ -16,6 +23,31 @@ class TextView(viewsets.ModelViewSet):
 class SummariesView(viewsets.ModelViewSet):
     queryset = Summaries.objects.all()
     serializer_class = SummariesSerializer
+
+
+input_summary = ''
+text_id = None
+class SummaryView(APIView):
+    
+    def post(self, request, format=None):
+        global input_summary,text_id
+        input_summary = request.data.get('summary')
+        text_id = request.data.get('text')
+        prompt_id = Text.objects.filter(pk=text_id).first().prompt_id
+        student_id = request.data.get('text')
+        # input_summary = 'They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it.'
+        content_value, wording_value = get_content_and_wording(prompt_id, student_id, input_summary)
+        evaluation_values = [content_value, wording_value]
+        return Response(evaluation_values, status=status.HTTP_200_OK)
+    
+    def get(self, request, format=None):
+        global input_summary
+        # prompt_id = Text.objects.filter(pk=text_id).first().prompt_id
+        prompt_id = "ebad26"
+        
+        # input_summary = 'They would rub it up with soda to make the smell go away and it wouldnt be a bad smell. Some of the meat would be tossed on the floor where there was sawdust spit of the workers and they would make the meat all over again with the things in it.'
+
+        return Response("", status=status.HTTP_200_OK)
 
 # def home_view(request):
 #     context = {}
