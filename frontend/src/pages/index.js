@@ -81,11 +81,21 @@ const Page = (props) => {
     //const[assignment,setAssignment] = useState("")
 	
 	const { __clerk_ssr_state, assignments,contentValues } = props;
-	// useEffect(() => {
-	// 	if (typeof window !== "undefined" && window.localStorage) {
-	// 		localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
-	// 	}
-	// }, []);
+	useEffect(() => {
+		// if (typeof window !== "undefined" && window.localStorage) {
+		// 	localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
+		// }
+		const fetchStudentCount = async () => {
+			try {
+				const res = await axios.get('/api/dashboard/students/');
+				console.log()
+
+			} catch (error) {
+				// Handle any errors here, such as network issues or failed requests.
+				console.error('Error updating assignmentID:', error);
+			  }
+		}
+	}, []);
 
 	useEffect(() => {
 		const fetchSummaryData = async () => {
