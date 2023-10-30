@@ -15,18 +15,23 @@ import { clerkClient } from "@clerk/nextjs";
 import { getAuth, buildClerkProps } from "@clerk/nextjs/server";
 
 import { useEffect } from "react";
+import { redirect } from "next/navigation";
+import { Page as StudentPage } from "src/pages/dashboard-student";
 
 const now = new Date();
 
 const Page = (props) => {
 	const { __clerk_ssr_state } = props;
+	// if (__clerk_ssr_state.user.username != "teacher") {
+	// 	redirect("/dashboard-student");
+	// }
 	useEffect(() => {
 		if (typeof window !== "undefined" && window.localStorage) {
 			localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
 		}
 	}, []);
 
-	return (
+	const TeacherDashboard = (
 		<>
 			<Head>
 				<title>Overview | Summary Evaluation System</title>
@@ -193,6 +198,14 @@ const Page = (props) => {
 			</Box>
 		</>
 	);
+
+	const StudentDashboard = <StudentPage />;
+
+	if (__clerk_ssr_state.user.username != "teacher") {
+		return StudentDashboard;
+	} else {
+		return TeacherDashboard;
+	}
 };
 
 Page.getLayout = (page) => <DashboardLayout>{page}</DashboardLayout>;

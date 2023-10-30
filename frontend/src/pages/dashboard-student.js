@@ -7,9 +7,9 @@ import {
 	Unstable_Grid2 as Grid,
 } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { AssignmentStepper} from "src/sections/assignments/assignment-stepper";
+import { AssignmentStepper } from "src/sections/assignments/assignment-stepper";
 
-const Page = () => (
+export const Page = () => (
 	<>
 		<Head>
 			<title>Student's Dashboard | Summary Evaluation System</title>
