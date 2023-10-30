@@ -59,7 +59,7 @@ export const ScoreAssignmentModal = (props) => {
 												Content Score:
 											</Typography>
 											<Typography variant="body1" className="text-center">
-												{normalize(props.contentScore, -2, 4).toFixed(2)}
+												{normalize(props.contentScore, -2, 4).toFixed(2)} %
 											</Typography>
 										</div>
 										<div class="basis-1/2 justify-center items-center">
@@ -67,7 +67,7 @@ export const ScoreAssignmentModal = (props) => {
 												Wording Score:
 											</Typography>
 											<Typography variant="body1" className="text-center">
-												{normalize(props.wordingScore, -2, 4).toFixed(2)}
+												{normalize(props.wordingScore, -2, 4).toFixed(2)} %
 											</Typography>
 										</div>
 									</div>
