@@ -4,7 +4,7 @@ import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewTotalCustomers = (props) => {
+export const TotalStudents = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -39,45 +39,13 @@ export const OverviewTotalCustomers = (props) => {
             </SvgIcon>
           </Avatar>
         </Stack>
-        {difference && (
-          <Stack
-            alignItems="center"
-            direction="row"
-            spacing={2}
-            sx={{ mt: 2 }}
-          >
-            <Stack
-              alignItems="center"
-              direction="row"
-              spacing={0.5}
-            >
-              <SvgIcon
-                color={positive ? 'success' : 'error'}
-                fontSize="small"
-              >
-                {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
-              </SvgIcon>
-              <Typography
-                color={positive ? 'success.main' : 'error.main'}
-                variant="body2"
-              >
-                {difference}%
-              </Typography>
-            </Stack>
-            <Typography
-              color="text.secondary"
-              variant="caption"
-            >
-              Since last month
-            </Typography>
-          </Stack>
-        )}
+        
       </CardContent>
     </Card>
   );
 };
 
-OverviewTotalCustomers.propTypes = {
+TotalStudents.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   value: PropTypes.string.isRequired,

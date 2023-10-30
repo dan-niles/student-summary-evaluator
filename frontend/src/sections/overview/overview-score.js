@@ -97,7 +97,7 @@ const useChartOptions = (categories) => {
 
 
 
-export const OverviewSales = (props) => {
+export const Score = (props) => {
   const { chartSeries, sx, categories,title } = props;
 
   const chartOptions = useChartOptions(categories);
@@ -147,7 +147,7 @@ export const OverviewSales = (props) => {
   );
 };
 
-OverviewSales.protoTypes = {
+Score.protoTypes = {
   chartSeries: PropTypes.array.isRequired,
   sx: PropTypes.object
 };

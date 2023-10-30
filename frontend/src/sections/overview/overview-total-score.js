@@ -83,7 +83,7 @@ const iconMap = {
   )
 };
 
-export const OverviewTraffic = (props) => {
+export const OverallScore = (props) => {
   const { chartSeries, labels, sx } = props;
   const chartOptions = useChartOptions(labels);
 
@@ -139,7 +139,7 @@ export const OverviewTraffic = (props) => {
   );
 };
 
-OverviewTraffic.propTypes = {
+OverallScore.propTypes = {
   chartSeries: PropTypes.array.isRequired,
   labels: PropTypes.array.isRequired,
   sx: PropTypes.object

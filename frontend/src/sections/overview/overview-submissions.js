@@ -17,11 +17,12 @@ import {
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
+import dayjs from 'dayjs';
 
 const statusMap = {
   pending: 'warning',
-  delivered: 'success',
-  refunded: 'error'
+  submit: 'success',
+  error: 'error'
 };
 
 export const OverviewLatestOrders = (props) => {
@@ -41,9 +42,9 @@ export const OverviewLatestOrders = (props) => {
                 <TableCell>
                   Student
                 </TableCell>
-                {/* <TableCell sortDirection="desc">
-                  Date
-                </TableCell> */}
+                <TableCell sortDirection="desc">
+                  Submit Date
+                </TableCell>
                 <TableCell>
                   Status
                 </TableCell>
@@ -51,8 +52,8 @@ export const OverviewLatestOrders = (props) => {
             </TableHead>
             <TableBody>
               {submissions.map((submission) => {
-                //const createdAt = format(submission.createdAt, 'dd/MM/yyyy');
-
+               const submitAt = submission.submitAt? dayjs(submission.submitAt).format('DD/MM/YYYY') : "still not submit";
+                console.log(submission.submitAt)
                 return (
                   <TableRow
                     hover
@@ -64,9 +65,9 @@ export const OverviewLatestOrders = (props) => {
                     <TableCell>
                       {submission.student.name}
                     </TableCell>
-                    {/* <TableCell>
-                      {createdAt}
-                    </TableCell> */}
+                    <TableCell>
+                      {submitAt}
+                    </TableCell>
                     <TableCell>
                       <SeverityPill color={statusMap[submission.status]}>
                         {submission.status}

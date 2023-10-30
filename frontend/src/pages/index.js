@@ -2,14 +2,13 @@ import Head from "next/head";
 import { subDays, subHours } from "date-fns";
 import { Box, Container, Unstable_Grid2 as Grid,TextField,MenuItem } from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { OverviewBudget } from "src/sections/overview/overview-budget";
-import { OverviewLatestOrders } from "src/sections/overview/overview-latest-orders";
-import { OverviewLatestProducts } from "src/sections/overview/overview-latest-products";
-import { OverviewSales } from "src/sections/overview/overview-sales";
+import { TotalAssignments } from "src/sections/overview/overview-assignments";
+import { OverviewLatestOrders } from "src/sections/overview/overview-submissions";
+import { Score } from "src/sections/overview/overview-score";
 import { OverviewTasksProgress } from "src/sections/overview/overview-tasks-progress";
-import { OverviewTotalCustomers } from "src/sections/overview/overview-total-customers";
-import { OverviewTotalProfit } from "src/sections/overview/overview-total-profit";
-import { OverviewTraffic } from "src/sections/overview/overview-traffic";
+import { TotalStudents } from "src/sections/overview/overview-total-students";
+import { TotalStudentsEnrolled } from "src/sections/overview/overview-students-enrolled";
+import { OverallScore } from "src/sections/overview/overview-total-score";
 
 import { clerkClient } from "@clerk/nextjs";
 import { getAuth, buildClerkProps } from "@clerk/nextjs/server";
@@ -32,6 +31,9 @@ const taskProgress = (data, enrolledStudents) => {
 		}
 	  });
 
+    if (!enrolledStudents){
+		return 0
+	}
 	return (complete/enrolledStudents * 100).toFixed(1)
 	 
 }
@@ -43,8 +45,8 @@ const getSubmissions = (data) =>{
 		student: {
 			name:item.eval_students.firstName,
 		},
-		//submitAt: item.submitted_on,
-		status: item.submitstatus || 'pending',
+		submitAt: item.submitted_on,
+		status: item.is_submitted ? 'submit' : 'pending',
 	  }));
 	};
 
@@ -99,6 +101,7 @@ const Page = (props) => {
 	
 
 	const { __clerk_ssr_state, assignments,contentValues } = props;
+
 	useEffect(() => {
 		// if (typeof window !== "undefined" && window.localStorage) {
 		// 	localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
@@ -206,15 +209,15 @@ const Page = (props) => {
 
 
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewBudget
+							<TotalAssignments
 								difference={12}
 								positive
 								sx={{ height: "100%" }}
-								value = {5}
+								value = {assignments.length}
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTotalCustomers
+							<TotalStudents
 								difference={16}
 								positive={false}
 								sx={{ height: "100%" }}
@@ -225,10 +228,10 @@ const Page = (props) => {
 							<OverviewTasksProgress sx={{ height: "100%" }} value={studentcompleted} />
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTotalProfit sx={{ height: "100%" }} value={studentsenrolled} />
+							<TotalStudentsEnrolled sx={{ height: "100%" }} value={studentsenrolled} />
 						</Grid>
 						<Grid xs={6} lg={4}>
-							<OverviewSales
+							<Score
 								chartSeries={[
 									{
 										name: "This year",
@@ -242,7 +245,7 @@ const Page = (props) => {
 							
 						</Grid>
 						<Grid xs={6} lg={4}>
-							<OverviewSales
+							<Score
 								chartSeries={[
 									{
 										name: "last year",
@@ -256,7 +259,7 @@ const Page = (props) => {
 							
 						</Grid>
 						<Grid xs={12} md={6} lg={4}>
-							<OverviewTraffic
+							<OverallScore
 								chartSeries={totalScores}
 								labels={["Low", "Normal", "Best"]}
 								sx={{ height: "100%" }}
