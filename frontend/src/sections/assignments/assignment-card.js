@@ -20,7 +20,11 @@ import {
 
 export const AssignmentCard = (props) => {
 	const { assignment } = props;
-	const handleOpen = () => props.setOpenStudentsModal(true);
+	const handleStudentModalOpen = () => props.setOpenStudentsModal(true);
+	const handleDeleteModalOpen = () => {
+		props.setDeleteID(assignment.id);
+		props.setOpenDeleteModal(true);
+	};
 
 	return (
 		<Card
@@ -49,6 +53,7 @@ export const AssignmentCard = (props) => {
 					aria-label="delete"
 					className="justify-self-end"
 					color="error"
+					onClick={handleDeleteModalOpen}
 				>
 					<DeleteIcon />
 				</IconButton>
@@ -78,7 +83,7 @@ export const AssignmentCard = (props) => {
 						color="text.secondary"
 						display="inline"
 						variant="body2"
-						onClick={handleOpen}
+						onClick={handleStudentModalOpen}
 					>
 						<Button>{assignment.downloads} Students</Button>
 					</Typography>

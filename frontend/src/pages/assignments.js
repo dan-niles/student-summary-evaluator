@@ -15,12 +15,15 @@ import { AssignmentCard } from "src/sections/assignments/assignment-card";
 import { AssignmentsSearch } from "src/sections/assignments/assignments-search";
 import { CreateAssignmentBtn } from "src/sections/assignments/create-assignment-btn";
 import { AddStudentsModal } from "src/sections/assignments/add-students";
+import { DeleteAssignmentModal } from "src/sections/assignments/delete-assignment";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Page = () => {
 	const [assignments, setAssignments] = useState([]);
 	const [openStudentsModal, setOpenStudentsModal] = useState(false);
+	const [openDeleteModal, setOpenDeleteModal] = useState(false);
+	const [deleteID, setDeleteID] = useState(null);
 
 	const getAssignments = async () => {
 		try {
@@ -29,7 +32,7 @@ const Page = () => {
 				const mapped_assignments = res.data.assignments.map(
 					(assignment, idx) => {
 						return {
-							id: idx,
+							id: assignment.id,
 							createdAt: "31/10/2023",
 							description: assignment.question.slice(0, 100) + "...",
 							title: assignment.eval_text.title,
@@ -100,6 +103,8 @@ const Page = () => {
 									<AssignmentCard
 										assignment={assignment}
 										setOpenStudentsModal={setOpenStudentsModal}
+										setOpenDeleteModal={setOpenDeleteModal}
+										setDeleteID={setDeleteID}
 									/>
 								</Grid>
 							))}
@@ -109,6 +114,12 @@ const Page = () => {
 				<AddStudentsModal
 					openStudentsModal={openStudentsModal}
 					setOpenStudentsModal={setOpenStudentsModal}
+				/>
+				<DeleteAssignmentModal
+					openDeleteModal={openDeleteModal}
+					setOpenDeleteModal={setOpenDeleteModal}
+					deleteID={deleteID}
+					getAssignments={getAssignments}
 				/>
 			</Box>
 		</>
