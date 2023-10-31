@@ -53,7 +53,7 @@ const getSubmissions = (data) => {
 			name: item.eval_students.firstName,
 		},
 		submitAt: item.submitted_on,
-		status: item.is_submitted ? "submit" : "pending",
+		status: item.is_submitted ? "Submitted" : "Pending",
 	}));
 };
 
