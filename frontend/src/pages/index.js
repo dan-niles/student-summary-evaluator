@@ -363,24 +363,13 @@ export const getServerSideProps = async (ctx) => {
 	//const userId = 1
 	const assignments = await prisma.eval_assignments.findMany({
 		where: {
-			createdBy_id: userId,
+			createdBy_id: 1,
 		},
 	});
 
-	// const { assignmentID } = ctx.req.session.assignmentID || 0;
-	// console.log(assignmentID)
-	// const contentValues = await prisma.eval_summaries.findMany({
-	// 	where: {
-	// 	  question_id: assignmentID, // Replace 'id' with your actual field name and 'specificId' with the value you want to query by.
-	// 	},
-	// 	select: {
-	// 	 content_score: true, // Specify the field you want to retrieve
-	// 	},
-	//   });
-
 	return {
 		props: {
-			//...buildClerkProps(ctx.req, { user }),
+			...buildClerkProps(ctx.req, { user }),
 			assignments: JSON.parse(
 				JSON.stringify(assignments, (key, value) =>
 					typeof value === "bigint" ? value.toString() : value
