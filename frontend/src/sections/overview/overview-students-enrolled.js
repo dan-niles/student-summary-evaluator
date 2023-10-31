@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
+import { PiStudent } from "react-icons/pi";
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewTotalProfit = (props) => {
+export const TotalStudentsEnrolled = (props) => {
   const { value, sx } = props;
 
   return (
@@ -19,7 +20,7 @@ export const OverviewTotalProfit = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Total Profit
+              Total Students Enrolled
             </Typography>
             <Typography variant="h4">
               {value}
@@ -33,7 +34,7 @@ export const OverviewTotalProfit = (props) => {
             }}
           >
             <SvgIcon>
-              <CurrencyDollarIcon />
+              <PiStudent />
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -42,7 +43,7 @@ export const OverviewTotalProfit = (props) => {
   );
 };
 
-OverviewTotalProfit.propTypes = {
+TotalStudentsEnrolled.propTypes = {
   value: PropTypes.string,
   sx: PropTypes.object
 };

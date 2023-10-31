@@ -1,41 +1,189 @@
 import Head from "next/head";
 import { subDays, subHours } from "date-fns";
-import { Box, Container, Unstable_Grid2 as Grid } from "@mui/material";
+import {
+	Box,
+	Container,
+	Unstable_Grid2 as Grid,
+	TextField,
+	MenuItem,
+} from "@mui/material";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { OverviewBudget } from "src/sections/overview/overview-budget";
-import { OverviewLatestOrders } from "src/sections/overview/overview-latest-orders";
-import { OverviewLatestProducts } from "src/sections/overview/overview-latest-products";
-import { OverviewSales } from "src/sections/overview/overview-sales";
+import { TotalAssignments } from "src/sections/overview/overview-assignments";
+import { OverviewLatestOrders } from "src/sections/overview/overview-submissions";
+import { Score } from "src/sections/overview/overview-score";
 import { OverviewTasksProgress } from "src/sections/overview/overview-tasks-progress";
-import { OverviewTotalCustomers } from "src/sections/overview/overview-total-customers";
-import { OverviewTotalProfit } from "src/sections/overview/overview-total-profit";
-import { OverviewTraffic } from "src/sections/overview/overview-traffic";
+import { TotalStudents } from "src/sections/overview/overview-total-students";
+import { TotalStudentsEnrolled } from "src/sections/overview/overview-students-enrolled";
+import { OverallScore } from "src/sections/overview/overview-total-score";
 
 import { clerkClient } from "@clerk/nextjs";
 import { getAuth, buildClerkProps } from "@clerk/nextjs/server";
 
-import { useEffect } from "react";
-import { redirect } from "next/navigation";
+import { useEffect, useState } from "react";
+import { PrismaClient } from "@prisma/client";
+
+import axios from "axios";
 import { Page as StudentPage } from "src/pages/dashboard-student";
 
 const now = new Date();
 
+const prisma = new PrismaClient();
+
+const taskProgress = (data, enrolledStudents) => {
+	let complete = 0;
+	data.summaries.forEach((item) => {
+		console.log(item.is_submitted);
+		if (item.is_submitted) {
+			complete += 1;
+		}
+	});
+
+	if (!enrolledStudents) {
+		console.log(enrolledStudents);
+		return 0;
+	}
+	return ((complete / enrolledStudents) * 100).toFixed(1);
+};
+
+const getSubmissions = (data) => {
+	return data.summaries.map((item) => ({
+		id: item.id || "",
+		ref: item.question_id || "", // Assuming 'question_id' is the equivalent of 'ref'
+		student: {
+			name: item.eval_students.firstName,
+		},
+		submitAt: item.submitted_on,
+		status: item.is_submitted ? "submit" : "pending",
+	}));
+};
+
+const getRangeValues = (arrayValues) => {
+	const ranges = [
+		{ min: 0, max: 35 },
+		{ min: 35, max: 75 },
+		{ min: 75, max: 100 },
+	];
+	const counts = new Array(ranges.length).fill(0);
+
+	for (const value of arrayValues) {
+		for (let i = 0; i < ranges.length; i++) {
+			if (value >= ranges[i].min && value < ranges[i].max) {
+				counts[i]++;
+				break;
+			}
+		}
+	}
+
+	return counts;
+};
+
+const calculate = (arrayValues) => {
+	const ranges = [];
+	const counts = [];
+
+	// Define the ranges and initialize counts to zero
+	for (let i = 10; i <= 100; i += 10) {
+		ranges.push({ min: i, max: i + 10 });
+		counts.push(0);
+	}
+	for (const value of arrayValues) {
+		for (let i = 0; i < ranges.length; i++) {
+			if (value >= ranges[i].min && value <= ranges[i].max) {
+				counts[i]++;
+				break;
+			}
+		}
+	}
+	return counts;
+};
+
 const Page = (props) => {
-	const { __clerk_ssr_state } = props;
-	// if (__clerk_ssr_state.user.username != "teacher") {
-	// 	redirect("/dashboard-student");
-	// }
+	const [assignmentID, setAssignmentID] = useState(1);
+	const [contentScores, setcontentScores] = useState([]);
+	const [wordingScores, setwordingScores] = useState([]);
+	const [totalScores, setTotalScores] = useState([]);
+	const [submissions, setSubmission] = useState([]);
+	const [studentcount, setStudentCount] = useState(0);
+	const [studentsenrolled, setStudentsenrolled] = useState(0);
+	const [studentcompleted, setStudentcompleted] = useState(0);
+	//const[assignment,setAssignment] = useState("")
+
+	const { __clerk_ssr_state, assignments, contentValues } = props;
+
 	useEffect(() => {
 		if (typeof window !== "undefined" && window.localStorage) {
 			localStorage.setItem("user_data", JSON.stringify(__clerk_ssr_state.user));
 		}
+		const fetchStudentCount = async () => {
+			try {
+				const res = await axios.get("/api/dashboard/students/");
+				setStudentCount(res.data.totalStudents);
+			} catch (error) {
+				// Handle any errors here, such as network issues or failed requests.
+				console.error("Error updating assignmentID:", error);
+			}
+		};
+		fetchStudentCount();
 	}, []);
+
+	useEffect(() => {
+		const fetchSummaryData = async () => {
+			try {
+				// Send a POST request to the API route to update the assignmentID on the server using Axios.
+				const res = await axios.get("/api/dashboard/summaries/" + assignmentID);
+				const data = res.data;
+				setStudentsenrolled(data.summaries.length);
+				const contentScores = calculate(
+					data.summaries.map((summary) => summary.content_score)
+				);
+				const wordingScores = calculate(
+					data.summaries.map((summary) => summary.wording_score)
+				);
+				const totalScores = data.summaries.map((summary) => {
+					const contentScore = parseFloat(summary.content_score);
+					const wordingScore = parseFloat(summary.wording_score);
+
+					// Check if parsing was successful before adding
+					if (!isNaN(contentScore) && !isNaN(wordingScore)) {
+						return (contentScore + wordingScore) / 2;
+					}
+
+					// Handle cases where parsing fails (e.g., non-numeric values)
+					return 0; // You can choose a different default value if needed
+				});
+
+				setcontentScores(contentScores);
+				setwordingScores(wordingScores);
+				setTotalScores(getRangeValues(totalScores));
+				// const res1 = await axios.get('/api/dashboard/summaries/');
+				// console.log(res1.data.summaries)
+				setSubmission(getSubmissions(data));
+
+				setStudentcompleted(taskProgress(data, studentsenrolled));
+			} catch (error) {
+				// Handle any errors here, such as network issues or failed requests.
+				console.error("Error updating assignmentID:", error);
+			}
+		};
+
+		fetchSummaryData();
+	}, [assignmentID]);
+
+	const handleSelectChange = async (event) => {
+		const selectedValue = event.target.value;
+		const selectedQ = assignments.find(
+			(assignment) => assignment.question === selectedValue
+		);
+
+		setAssignmentID(selectedQ?.id);
+	};
 
 	const TeacherDashboard = (
 		<>
 			<Head>
 				<title>Overview | Summary Evaluation System</title>
 			</Head>
+
 			<Box
 				component="main"
 				sx={{
@@ -45,51 +193,110 @@ const Page = (props) => {
 			>
 				<Container maxWidth="xl">
 					<Grid container spacing={3}>
+						<TextField
+							sx={{ mb: 2 }}
+							fullWidth
+							id="exampleFormControlSelect"
+							select
+							label="Assignment"
+							helperText="Please select your assignement"
+							onChange={handleSelectChange}
+						>
+							{assignments.map((assignment, index) => (
+								<MenuItem key={index} value={assignment.question}>
+									{assignment.question}
+								</MenuItem>
+							))}
+							{/* <MenuItem  value="q1"> Question 1</MenuItem>
+						<MenuItem value= "q2"> Question 2</MenuItem>
+						<MenuItem  value= "q3"> Question 3</MenuItem>
+						<MenuItem  value="q4"> Question 4</MenuItem> */}
+						</TextField>
+
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewBudget
+							<TotalAssignments
 								difference={12}
 								positive
 								sx={{ height: "100%" }}
-								value="$24k"
+								value={assignments.length}
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTotalCustomers
+							<TotalStudents
 								difference={16}
 								positive={false}
 								sx={{ height: "100%" }}
-								value="1.6k"
+								value={studentcount}
 							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTasksProgress sx={{ height: "100%" }} value={75.5} />
+							<OverviewTasksProgress
+								sx={{ height: "100%" }}
+								value={studentcompleted}
+							/>
 						</Grid>
 						<Grid xs={12} sm={6} lg={3}>
-							<OverviewTotalProfit sx={{ height: "100%" }} value="$15k" />
+							<TotalStudentsEnrolled
+								sx={{ height: "100%" }}
+								value={studentsenrolled}
+							/>
 						</Grid>
-						<Grid xs={12} lg={8}>
-							<OverviewSales
+						<Grid xs={6} lg={4}>
+							<Score
 								chartSeries={[
 									{
 										name: "This year",
-										data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20],
-									},
-									{
-										name: "Last year",
-										data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13],
+										data: contentScores,
 									},
 								]}
 								sx={{ height: "100%" }}
+								categories={[
+									"0-10",
+									"10-20",
+									"20-30",
+									"30-40",
+									"40-50",
+									"50-60",
+									"60-70",
+									"70-80",
+									"80-90",
+									"90-100",
+								]}
+								title="Content Score"
+							/>
+						</Grid>
+						<Grid xs={6} lg={4}>
+							<Score
+								chartSeries={[
+									{
+										name: "last year",
+										data: wordingScores,
+									},
+								]}
+								sx={{ height: "100%" }}
+								categories={[
+									"0-10",
+									"10-20",
+									"20-30",
+									"30-40",
+									"40-50",
+									"50-60",
+									"60-70",
+									"70-80",
+									"80-90",
+									"90-100",
+								]}
+								title="Wording Score"
 							/>
 						</Grid>
 						<Grid xs={12} md={6} lg={4}>
-							<OverviewTraffic
-								chartSeries={[63, 15, 22]}
-								labels={["Desktop", "Tablet", "Phone"]}
+							<OverallScore
+								chartSeries={totalScores}
+								labels={["Low", "Normal", "Best"]}
 								sx={{ height: "100%" }}
 							/>
 						</Grid>
-						<Grid xs={12} md={6} lg={4}>
+						{/* <Grid xs={12} md={6} lg={4}>
 							<OverviewLatestProducts
 								products={[
 									{
@@ -125,71 +332,10 @@ const Page = (props) => {
 								]}
 								sx={{ height: "100%" }}
 							/>
-						</Grid>
-						<Grid xs={12} md={12} lg={8}>
+						</Grid> */}
+						<Grid xs={12} md={12} lg={12}>
 							<OverviewLatestOrders
-								orders={[
-									{
-										id: "f69f88012978187a6c12897f",
-										ref: "DEV1049",
-										amount: 30.5,
-										customer: {
-											name: "Ekaterina Tankova",
-										},
-										createdAt: 1555016400000,
-										status: "pending",
-									},
-									{
-										id: "9eaa1c7dd4433f413c308ce2",
-										ref: "DEV1048",
-										amount: 25.1,
-										customer: {
-											name: "Cao Yu",
-										},
-										createdAt: 1555016400000,
-										status: "delivered",
-									},
-									{
-										id: "01a5230c811bd04996ce7c13",
-										ref: "DEV1047",
-										amount: 10.99,
-										customer: {
-											name: "Alexa Richardson",
-										},
-										createdAt: 1554930000000,
-										status: "refunded",
-									},
-									{
-										id: "1f4e1bd0a87cea23cdb83d18",
-										ref: "DEV1046",
-										amount: 96.43,
-										customer: {
-											name: "Anje Keizer",
-										},
-										createdAt: 1554757200000,
-										status: "pending",
-									},
-									{
-										id: "9f974f239d29ede969367103",
-										ref: "DEV1045",
-										amount: 32.54,
-										customer: {
-											name: "Clarke Gillebert",
-										},
-										createdAt: 1554670800000,
-										status: "delivered",
-									},
-									{
-										id: "ffc83c1560ec2f66a1c05596",
-										ref: "DEV1044",
-										amount: 16.76,
-										customer: {
-											name: "Adam Denisov",
-										},
-										createdAt: 1554670800000,
-										status: "delivered",
-									},
-								]}
+								submissions={submissions}
 								sx={{ height: "100%" }}
 							/>
 						</Grid>
@@ -214,8 +360,39 @@ export const getServerSideProps = async (ctx) => {
 	const { userId } = getAuth(ctx.req);
 
 	const user = userId ? await clerkClient.users.getUser(userId) : undefined;
+	//const userId = 1
+	const assignments = await prisma.eval_assignments.findMany({
+		where: {
+			createdBy_id: userId,
+		},
+	});
 
-	return { props: { ...buildClerkProps(ctx.req, { user }) } };
+	// const { assignmentID } = ctx.req.session.assignmentID || 0;
+	// console.log(assignmentID)
+	// const contentValues = await prisma.eval_summaries.findMany({
+	// 	where: {
+	// 	  question_id: assignmentID, // Replace 'id' with your actual field name and 'specificId' with the value you want to query by.
+	// 	},
+	// 	select: {
+	// 	 content_score: true, // Specify the field you want to retrieve
+	// 	},
+	//   });
+
+	return {
+		props: {
+			//...buildClerkProps(ctx.req, { user }),
+			assignments: JSON.parse(
+				JSON.stringify(assignments, (key, value) =>
+					typeof value === "bigint" ? value.toString() : value
+				)
+			),
+			contentValues: JSON.parse(
+				JSON.stringify(assignments, (key, value) =>
+					typeof value === "bigint" ? value.toString() : value
+				)
+			),
+		},
+	};
 };
 
 export default Page;
