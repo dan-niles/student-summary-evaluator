@@ -20,6 +20,15 @@ import {
 
 export const AssignmentCard = (props) => {
 	const { assignment } = props;
+	const handleStudentModalOpen = () => props.setOpenStudentsModal(true);
+	const handleDeleteModalOpen = () => {
+		props.setDeleteID(assignment.id);
+		props.setOpenDeleteModal(true);
+	};
+	const handleViewClick = () => {
+		props.setViewID(assignment.id);
+		props.setOpenViewModal(true);
+	};
 
 	return (
 		<Card
@@ -38,7 +47,11 @@ export const AssignmentCard = (props) => {
 				</Typography>
 			</CardContent>
 			<CardActions className="px-6 mb-3 flex">
-				<Button variant="contained" size="small" startIcon={<VisibilityIcon />}>
+				<Button
+					size="small"
+					startIcon={<VisibilityIcon />}
+					onClick={handleViewClick}
+				>
 					View
 				</Button>
 				<Button variant="outlined" size="small" startIcon={<EditIcon />}>
@@ -48,6 +61,7 @@ export const AssignmentCard = (props) => {
 					aria-label="delete"
 					className="justify-self-end"
 					color="error"
+					onClick={handleDeleteModalOpen}
 				>
 					<DeleteIcon />
 				</IconButton>
@@ -73,8 +87,13 @@ export const AssignmentCard = (props) => {
 					<SvgIcon color="action" fontSize="small">
 						<UserGroupIcon />
 					</SvgIcon>
-					<Typography color="text.secondary" display="inline" variant="body2">
-						{assignment.downloads} Students
+					<Typography
+						color="text.secondary"
+						display="inline"
+						variant="body2"
+						onClick={handleStudentModalOpen}
+					>
+						<Button>{assignment.downloads} Students</Button>
 					</Typography>
 				</Stack>
 			</Stack>

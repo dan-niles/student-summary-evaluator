@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { StudentsTable } from "src/sections/student/students-table";
-import { StudentsSearch } from "src/sections/student/students-search";
+import { PreviousAssignmentTable } from "src/sections/student/previous-assignment-table";
 import { applyPagination } from "src/utils/apply-pagination";
 import { clerkClient } from "@clerk/nextjs";
 import prisma from "../lib/prisma";
+import { AssignmentSearch } from "src/sections/student/assignment-history-search";
 
 const now = new Date();
 
@@ -233,45 +233,11 @@ const Page = (props) => {
 					<Stack spacing={3}>
 						<Stack direction="row" justifyContent="space-between" spacing={4}>
 							<Stack spacing={1}>
-								<Typography variant="h4">Students</Typography>
-								<Stack alignItems="center" direction="row" spacing={1}>
-									<Button
-										color="inherit"
-										startIcon={
-											<SvgIcon fontSize="small">
-												<ArrowUpOnSquareIcon />
-											</SvgIcon>
-										}
-									>
-										Import
-									</Button>
-									<Button
-										color="inherit"
-										startIcon={
-											<SvgIcon fontSize="small">
-												<ArrowDownOnSquareIcon />
-											</SvgIcon>
-										}
-									>
-										Export
-									</Button>
-								</Stack>
+								<Typography variant="h4">Your Previous Grades</Typography>
 							</Stack>
-							<div>
-								<Button
-									startIcon={
-										<SvgIcon fontSize="small">
-											<PlusIcon />
-										</SvgIcon>
-									}
-									variant="contained"
-								>
-									Add
-								</Button>
-							</div>
 						</Stack>
-						<StudentsSearch />
-						<StudentsTable
+						<AssignmentSearch />
+						<PreviousAssignmentTable
 							count={data.length}
 							items={students}
 							onDeselectAll={studentsSelection.handleDeselectAll}

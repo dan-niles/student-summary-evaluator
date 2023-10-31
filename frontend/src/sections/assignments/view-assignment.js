@@ -28,11 +28,9 @@ const style = {
 	width: 600,
 };
 
-export const CreateAssignmentBtn = (props) => {
-	const [open, setOpen] = React.useState(false);
-	const handleOpen = () => setOpen(true);
+export const ViewAssignmentModal = (props) => {
 	const handleClose = () => {
-		setOpen(false);
+		props.setOpenViewModal(false);
 		setTitle("");
 		setQuestion("");
 		setText("");
@@ -44,39 +42,18 @@ export const CreateAssignmentBtn = (props) => {
 	const [text, setText] = React.useState("");
 	const [deadline, setDeadline] = React.useState(dayjs());
 
-	const handleSubmit = async () => {
-		try {
-			const res = await axios.post("/api/assignments", {
-				title,
-				question,
-				text,
-				deadline: deadline.$d,
-				user_id: "1",
-			});
-			if (res.status === 200) {
-				props.getAssignments();
-				handleClose();
-			}
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
+	React.useEffect(() => {
+		axios.get("/api/assignments/" + props.viewID).then((res) => {
+			setTitle(res.data.assignments.eval_text.title);
+			setQuestion(res.data.assignments.question);
+			setText(res.data.assignments.eval_text.text);
+			setDeadline(dayjs(res.data.deadline));
+		});
+	}, [props.viewID]);
 	return (
 		<div>
-			<Button
-				onClick={handleOpen}
-				startIcon={
-					<SvgIcon fontSize="small">
-						<PlusIcon />
-					</SvgIcon>
-				}
-				variant="contained"
-			>
-				Create New
-			</Button>
 			<Modal
-				open={open}
+				open={props.openViewModal}
 				onClose={handleClose}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
@@ -84,8 +61,8 @@ export const CreateAssignmentBtn = (props) => {
 				<Box>
 					<Card sx={style}>
 						<CardHeader
-							title="Create New Assignment"
-							subheader="Please enter the details of the assignment."
+							title="View Assignment"
+							// subheader="Please enter the details of the assignment."
 							className="mb-0 pb-0"
 						/>
 						<CardContent>
@@ -95,6 +72,7 @@ export const CreateAssignmentBtn = (props) => {
 								className="mb-3"
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
+								inputProps={{ readOnly: true }}
 							/>
 							<TextField
 								label="Prompt Question"
@@ -102,14 +80,19 @@ export const CreateAssignmentBtn = (props) => {
 								className="mb-3 w-full"
 								value={question}
 								onChange={(e) => setQuestion(e.target.value)}
+								inputProps={{ readOnly: true }}
 							/>
-							<ReactQuill
-								theme="snow"
+							<TextField
+								label="Prompt"
+								variant="filled"
+								className="mb-3 w-full"
 								value={text}
-								onChange={setText}
-								className="mb-12"
-								style={{ height: "100px" }}
+								onChange={(e) => setText(e.target.value)}
+								inputProps={{ readOnly: true }}
+								multiline
+								rows={4}
 							/>
+
 							<DateTimePicker
 								className="mt-4"
 								label="Deadline"
@@ -121,8 +104,8 @@ export const CreateAssignmentBtn = (props) => {
 							/>
 						</CardContent>
 						<CardActions className="justify-end pr-6 pb-4">
-							<Button size="small" onClick={handleSubmit}>
-								Create Assignment
+							<Button size="small" onClick={handleClose}>
+								Close
 							</Button>
 						</CardActions>
 					</Card>

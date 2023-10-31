@@ -4,8 +4,8 @@ import { SvgIcon } from "@mui/material";
 
 export const itemsStudent = [
 	{
-		title: "Overview",
-		path: "/",
+		title: "Dashboard",
+		path: "/dashboard-student",
 		icon: (
 			<SvgIcon fontSize="small">
 				<ChartBarIcon />
@@ -13,8 +13,8 @@ export const itemsStudent = [
 		),
 	},
 	{
-		title: "Assignments",
-		path: "/assignments-student",
+		title: "History",
+		path: "/history-student",
 		icon: (
 			<SvgIcon fontSize="small">
 				<RectangleStackIcon />
