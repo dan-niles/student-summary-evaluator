@@ -1,5 +1,9 @@
 # Evalutaing Student Summaries
 
+<!-- Add image -->
+
+![Banner](img/banner.png)
+
 ## Background
 
 This is the code repository of Group 14 for CS3501: Data Science and Engineering Project at University of Moratuwa.
