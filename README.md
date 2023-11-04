@@ -1,4 +1,4 @@
-# Evalutaing Student Summaries
+# Evaluating Student Summaries
 
 <!-- Add image -->
 
